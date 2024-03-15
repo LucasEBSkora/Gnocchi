@@ -1,0 +1,199 @@
+program -> <statement>+
+
+statement ->  <block>
+            | <definition>
+            | "edge" create_edge ";"
+            | <expr> ";"
+            | <import_statement> ";"
+
+<block> -> "atom"? "{" <statement>+ "}" ";"
+
+<definition> -> <definition_header> <vertex_definition> ";"
+              | <definition_header> <holon_definition> ";"
+			  | <definition_header> <interface_definition> ";"
+
+definition_header -> <visibility>? ((id | "this" | "head") <definition_ op>)?
+visibility -> "public" | "private"
+definition_op -> "is"
+
+vertex_definition ->  "vertex" <primitive_type>? <notification_params>? <state_expr>? <interfaces>? <vertex_body>
+
+notes: int = int8 U int16 U int24 U int32, uint = uint8 U uint16 U uint24 U uint32, double = float U double and number = int U uint U double 
+for pattern matching purposes
+
+primitive_type -> <primitive_type_without_array> ("[" <expr> "]")*
+primitive_type_without_array -> "int8" | "int16" | "int24" | "int32" | "int" | "uint8" | "uint16" | "uint24" | "uint32" | "uint"
+                | "float" | "double" | "number" | "bool" | "char" | <reference_type>
+<reference_type> -> "ref"
+                |   "ref"  ("to" <type>)
+                |   "ref" ("to" "type" <in_type_clause>)
+		
+type -> <primitive_type> | id
+
+notification_params := "(" ")"
+                | "(" <notification_param> ("," <notification_param>)* ")"
+
+<notification_param> :  id <definition_op> <primitive_type> ("default" <expr>)?
+
+state_expr -> "bound"? <expr>
+
+interfaces -> id (, id)*
+
+vertex_body -> "," <vertex_body_part> <vertex_body>
+                | ""
+
+vertex_body_part -> default_notify
+                 |  create_edge
+                 |  enabled_ops
+                 |  initial_value
+
+// the edge function production tecnically can be empty, but that would be kinda useless in this case
+default_notify -> "this" notifies_operator "default" edge_function
+notifies_operator -> "->"
+
+edge_function -> ("when" <expr>)? ("with" <expr>)?
+
+// if we want to make a return notification (a notification to a dynamically defined vertex), we use a reference variable in the access list
+// in this case, it is mandatory that the reference appears on the right of the notify operator, because we can't be dynamically notified by someone, only notify someone dynamically.
+create_edge -> <access> <notifies_operator> <vertex_list> edge_function
+             | <vertex_list> <notifies_operator> <access> edge_function
+
+vertex_list -> access (, access)*
+
+enabled_ops ->  "enables" <operations>
+                |   "disables" <operations> 
+
+operations -> <operation>+
+operation -> "read" | "notify" | "listen"
+
+initial_value -> "initialise" <expr> 
+
+holon_definition -> "holon" <holon_signatures> ( ":" <interfaces>)? <block>
+
+holon_signatures -> <holon_signature> ("," <holon_signature>) 
+
+holon_signature -> id // holon without parameters.
+                | id <holon_parameters> // holon that is called with "{}". acts more like a constructor
+                | "{" <holon_parameter> "}" <binary_holon_operator> "{" <holon_parameter> "}"
+                | <unary_left_holon_operator> "{" <holon_parameter> "}"
+                | "{" <holon_parameter> "}" <unary_right_holon_operator>
+                | id "(" <holon_parameter> ("," <holon_parameter>)* ")" // this is basically syntactic sugar for creating methods.
+
+/*
+        In essence, holon mtOne (a is int, b is int) {
+                b := a + b;
+                return b;
+        };
+
+        would be translated to something like 
+        holon mtOne {
+                public mtOne is vertex (a is int, b is int, ret is ref), 
+                        this -> default with (a, b, ret),
+                vertex (a is int, b is int),
+                        holon -> this,
+                        this -> default with (a, a + b, ret);
+                vertex (a, b, ret):
+                        this -> ret with b;
+                
+        };
+*/
+
+holon_parameters -> "{" <holon_parameter> (";" <holon_parameter>)* (";" <variadic_holon_parameter>)? "}"
+
+holon_parameter -> id <pattern>
+
+variadic_holon_parameter -> id "..." <pattern>
+
+binary_holon_operator -> <binary_operator>
+                | id
+                | <> "in" "{" <binary_operator> ("," <binary_operator>)* "}"
+
+unary_left_holon_operator -> <unary_left_operator>
+                | id
+                | <> "in" "{" <unary_left_operator> ("," <unary_left_operator>)* "}"
+
+unary_right_holon_operator -> <unary_right_operator>
+                | id
+                | <> "in" "{" <unary_right_operator> ("," <unary_right_operator>)* "}"
+
+binary_operator ->  ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" 
+                 | "||"  | "^^"  | "&&"  
+                 | "|"  | "^"  | "&" 
+                 | "=="| "!=" | "<"| "<=" | ">"| ">="
+                 | "<<" | ">>"
+                 | "+" | "-" | "*" | "/" | "%"
+
+unary_left_operator -> "-" | "!" | "~" | "++" | "--"
+unary_right_operator -> "++" | "--"
+
+pattern -> <pattern_part> ( pattern_part)*
+
+// the three pattern parts which identify types are mutually exclusive
+// when you pass a vertex as parameter to a holon, it is parsed according to the holon parameter: if it is "a is int32", it will take the value, if it is "a is ref to int32", it will take
+// the reference. obviously, you can't have something like "is in {int32, ref to int32}", because then it would be impossible to know what you want
+
+pattern_part -> "is" <type> //to identify a value of a type
+        | <in_type_clause> // to identify a value of one of the following types
+        | "is" "type" <type> // to identify a type which derives another one (more useful if used with interfaces)
+        | "is" "type" <in_type_clause> // to identify a type, possibly limiting which are allowed
+        | "is" "type" // to identify any type
+        | "is" "same" "type" "as" <expr> // to identify a variable with the same type as the expression (remembering the type of a vertex is always the type of their internal state)
+        | <enabled_ops>
+        | "is" "not"? "bound"
+
+in_type_clause ->  "in" "{" <type> ("," <type>)*  "}"    
+
+interface_definition -> "interface" <interface_body>
+
+interface_body -> "{" <interface_body_definition>* "}"
+
+interface_body_definition -> <vertex_spec>
+
+vertex_spec -> ("this" | id) <pattern> ";"
+
+obs. there is a difference between vertex expressions and holon expressions.
+In the first, we can only deal with simple operations and they are only implemented for 
+primitive types (so bound to the implementation's definition of the operator and no notifications)
+
+Holon expressions apply holon definitions to the tree, leading to all other operations
+
+holons with both sets of parameters and named with identifiers are left-associative with
+ the lowest precedence
+
+expr -> <binary_holon> | <notify> 
+
+binary_holon -> <assignment> ( id <assignment>)*
+assignment -> <logical_or> ( <assignment_op> <assignment> )
+assignment_op -> ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" 
+logical_or -> <logical_xor> ( "||" <logical_or>)*
+logical_xor -> <logical_and> ( "^^" <logical_xor>)*
+logical_and -> <bitwise_or> ( "&&" <logical_and>)*
+bitwise_or -> <bitwise_xor> ( "|" <bitwise_or>)*
+bitwise_xor -> <bitwise_and> ( "^" <bitwise_xor>)*
+bitwise_and -> <equality> ( "&" <bitwise_and>)*
+equality -> <comparison> ( ("=="| "!=") <equality>)*
+comparison -> <bit_shift> ( ("<"| "<=" | ">"| ">=") <comparison>)*
+bit_shift -> <addition> ( ("<<" | ">>") <bit_shift>)*
+addition -> <multiplication> ( ("+" | "-") <addition>)*
+multiplication -> <holon_parametric_operator> ( ("*" | "/" | "%") <multiplication>)*
+holon_parametric_operator -> <unary_left> ( "<>" <holon_parametric_operator>)*
+unary_left -> <unary_right>
+        | ("<>" | <unary_left_operator>) <unary_left>
+unary_right -> <access> ("<>" | <unary_right_operator> | "'")*
+access -> <primary> <notification_or_field>
+
+// second and third case are notifications, fourth is holon acess, fifth is array access OR notification, and sixth and seventh are holon instantiations, 
+notification_or_field -> ""
+                |  "(" ")" <notification_or_field> 
+                |  "(" <expr> ("," <expr>) ")" <notification_or_field>
+                | ("." id) <notification_or_field>
+                |  "[" <expr> (";" <expr>) "]" <notification_or_field>
+                |  "{" "}" <notification_or_field>
+                |  "{" <expr> (";" <expr>) "}" <notification_or_field>
+
+primary -> <notify> | int_literal | float_literal | double_literal | char_literal | string_literal
+                id | "this" | "true" | "false" | "(" <expr> ")" | "this" "'" | "typeof" <expr> | "head"
+
+notify -> <param_list> <notifies_operator> access";"
+
+import_statement -> "import" (id | string_literal)
