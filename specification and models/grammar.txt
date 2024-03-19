@@ -37,7 +37,7 @@ notification_params := "(" ")"
 
 state_expr -> "bound"? <expr>
 
-interfaces -> id (, id)*
+interfaces -> id ("," id)*
 
 vertex_body -> "," <vertex_body_part> <vertex_body>
                 | ""
@@ -48,17 +48,17 @@ vertex_body_part -> default_notify
                  |  initial_value
 
 // the edge function production tecnically can be empty, but that would be kinda useless in this case
-default_notify -> "this" notifies_operator "default" edge_function
+default_notify -> "this" <notifies_operator> "default" <edge_function>
 notifies_operator -> "->"
 
 edge_function -> ("when" <expr>)? ("with" <expr>)?
 
 // if we want to make a return notification (a notification to a dynamically defined vertex), we use a reference variable in the access list
 // in this case, it is mandatory that the reference appears on the right of the notify operator, because we can't be dynamically notified by someone, only notify someone dynamically.
-create_edge -> <access> <notifies_operator> <vertex_list> edge_function
-             | <vertex_list> <notifies_operator> <access> edge_function
+create_edge -> <access> <notifies_operator> <vertex_list> <edge_function>
+             | <vertex_list> <notifies_operator> <access> <edge_function>
 
-vertex_list -> access (, access)*
+vertex_list -> <access> ("," <access>)*
 
 enabled_ops ->  "enables" <operations>
                 |   "disables" <operations> 
@@ -106,15 +106,15 @@ variadic_holon_parameter -> id "..." <pattern>
 
 binary_holon_operator -> <binary_operator>
                 | id
-                | <> "in" "{" <binary_operator> ("," <binary_operator>)* "}"
+                | "<>" "in" "{" <binary_operator> ("," <binary_operator>)* "}"
 
 unary_left_holon_operator -> <unary_left_operator>
                 | id
-                | <> "in" "{" <unary_left_operator> ("," <unary_left_operator>)* "}"
+                | "<>" "in" "{" <unary_left_operator> ("," <unary_left_operator>)* "}"
 
 unary_right_holon_operator -> <unary_right_operator>
                 | id
-                | <> "in" "{" <unary_right_operator> ("," <unary_right_operator>)* "}"
+                | "<>" "in" "{" <unary_right_operator> ("," <unary_right_operator>)* "}"
 
 binary_operator ->  ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" 
                  | "||"  | "^^"  | "&&"  
@@ -139,7 +139,7 @@ pattern_part -> "is" <type> //to identify a value of a type
         | "is" "type" // to identify any type
         | "is" "same" "type" "as" <expr> // to identify a variable with the same type as the expression (remembering the type of a vertex is always the type of their internal state)
         | <enabled_ops>
-        | "is" "not"? "bound"
+        | "is" "!"? "bound"
 
 in_type_clause ->  "in" "{" <type> ("," <type>)*  "}"    
 
@@ -192,7 +192,7 @@ notification_or_field -> ""
                 |  "{" <expr> (";" <expr>) "}" <notification_or_field>
 
 primary -> <notify> | int_literal | float_literal | double_literal | char_literal | string_literal
-                id | "this" | "true" | "false" | "(" <expr> ")" | "this" "'" | "typeof" <expr> | "head"
+                id | "this" | "true" | "false" | "(" <expr> ")" | "this" "'" | "head"
 
 notify -> <param_list> <notifies_operator> access";"
 

@@ -59,27 +59,121 @@
 
 %token <std::string> IDENTIFIER;
 
-%token DECLARE "declare";
-%token DELETE "delete";
-%token IF "if";
-%token WHILE "while";
+/* keywords */
+%token EDGE "edge";
+%token ATOM "atom";
+%token THIS "this";
+%token HEAD "head";
+%token PUBLIC "public";
+%token PRIVATE "private";
+%token IS "is";
+%token VERTEX "vertex";
+%token BOUND "bound";
+%token DEFAULT "default";
+%token WHEN "when";
+%token WITH "with";
+
+%token ENABLES "enables";
+%token DISABLES "disables";
+
+%token READ "read";
+%token LISTEN "listen";
+
+%token INITIALISE "initialise"
+
+%token HOLON "holon"
+
+/* type names */
+
+%token INT "int";
+%token INT8 "int8";
+%token INT16 "int16";
+%token INT24 "int24";
+%token INT32 "int32";
+
+%token UINT "uint";
+%token UINT8 "uint8";
+%token UINT16 "uint16";
+%token UINT24 "uint24";
+%token UINT32 "uint32";
+
+%token FLOAT "float";
+%token DOUBLE "double";
+%token NUMBER "number";
+%token BOOL "bool";
+%token CHAR "char";
+
+%token REF "ref";
+%token TO "to";
+%token TYPE "type";
+
+%token SAME "same";
+
+%token AS "as";
 
 /* Literals */
-%token <int> INTEGER;
+%token <int> INTEGER_LITERAL;
+%token <bool> BOOL_LITERAL;
+%token <char> CHAR_LITERAL;
+%token <std::string> STRING_LITERAL;
+%token <double> DOUBLE_LITERAL;
+%token <float> FLOAT_LITERAL;
 
+/* punctuation */
 %token SEMICOLON ";";
+%token COMMA ",";
+%token COLON ":";
 
-%token LEFTPAR "(";
-%token RIGHTPAR ")";
+%token LPAR "(";
+%token RPAR ")";
 %token LSBRACKET "[";
 %token RSBRACKET "]";
 %token LCBRACKET "{";
 %token RCBRACKET "}";
 
+/* operators */
+%token NOTIFY "->"
+%token ELLIPSIS "..."
+%token HOLON_OP "<>"
+
+%token ASSIGN ":=";
+%token ASSIGN_PLUS "+=";
+%token ASSIGN_MINUS "-=";
+%token ASSIGN_MUL "*=";
+%token ASSIGN_DIV "/=";
+%token ASSIGN_MOD "%=";
+%token ASSIGN_AND "&=";
+%token ASSIGN_OR "|=";
+%token ASSIGN_XOR "^=";
+%token LOGIC_OR "||";
+%token LOGIC_XOR "^^";
+%token LOGIC_AND "&&";
+%token BINARY_OR "|";
+%token BINARY_XOR "^";
+%token BINARY_AND "&";
+%token EQ "==";
+%token NE "!=";
+%token LT "<";
+%token LE "<=";
+%token GT ">";
+%token GE ">=";
+%token SHIFT_LEFT "<<";
+%token SHIFT_RIGHT ">>";
+%token PLUS "+";
+%token MINUS "-";
+%token MUL "*";
+%token DIV "/";
+%token MOD "%";
+%token LOGIC_NOT "!";
+%token BINARY_NOT "~";
+%token INC "++";
+%token DEC "--";
+%token DOT .;
+%token APOSTROPHE "'";
 
 %left LT GT EQ NE LE GE
-%right LEFTPAR LSBRACKET LCBRACKET ASSIGN 
-%left PLUS MINUS RIGHTPAR RSBRACKET RCBRACKET
+%right LPAR LSBRACKET LCBRACKET ASSIGN 
+%left PLUS MINUS RPAR RSBRACKET RCBRACKET
 
 %start program
 
@@ -108,7 +202,7 @@ declare_statement : "declare" IDENTIFIER ";" {
                   }
                   | "declare" IDENTIFIER "=" expression ";" {
                   }
-                  | "declare" IDENTIFIER "[" INTEGER "]" ";"{
+                  | "declare" IDENTIFIER "[" INTEGER_LITERAL "]" ";"{
                   };
 
 delete_statement : "delete" IDENTIFIER ";"{
@@ -128,7 +222,7 @@ expression : IDENTIFIER {
             } 
             | IDENTIFIER "[" expression "]" {
             }
-            | INTEGER {
+            | INTEGER_LITERAL {
             }
             | expression "+" expression {
             }
