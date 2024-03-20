@@ -32,22 +32,20 @@
 
 using namespace Gnocchi;
 
-Interpreter::Interpreter(std::string filename) : m_scanner(*this),
-                                                 m_parser(m_scanner, *this/*, stmts*/),
-                                                 m_location_col(0),
-                                                 fileName{filename}
+Interpreter::Interpreter(std::string filename) : locationProvider{filename}, m_scanner(locationProvider),
+                                                 m_parser(m_scanner, *this/*, stmts*/)
 {
 }
 
 int Interpreter::parse()
 {
-    m_location_col = 0;
+    locationProvider.reset();
     return m_parser.parse();
 }
 
 void Interpreter::clear()
 {
-    m_location_col = 0;
+    locationProvider.reset();
 }
 
 void Interpreter::switchInputStream(std::istream *is)
@@ -59,18 +57,3 @@ void Interpreter::switchInputStream(std::istream *is)
 // {
 //     return stmts;
 // }
-
-void Interpreter::increaseLocationCol(unsigned int loc)
-{
-    m_location_col += loc;
-}
-
-unsigned int Interpreter::getLocationCol() const
-{
-    return m_location_col;
-}
-
-std::string *Interpreter::getFileName()
-{
-    return &fileName;
-}

@@ -32,6 +32,7 @@
 #include <vector>
 
 #include "scanner.h"
+#include "LocationProvider.h"
 
 #include "parser.hpp"
 
@@ -50,21 +51,13 @@ public:
 
     friend class Parser;
     friend class Scanner;
-    
-protected:
-    // Used internally by Scanner YY_USER_ACTION to update location indicator
-    void increaseLocationCol(unsigned int loc);
-    
-    // Used to get last Scanner location. Used in error messages.
-    unsigned int getLocationCol() const;
-
-    std::string* getFileName();
 
 private:
+    LocationProvider locationProvider;
     Scanner m_scanner;
     Parser m_parser;
-    unsigned int m_location_col;
-    std::string fileName;
+
+    
 };
 
 }

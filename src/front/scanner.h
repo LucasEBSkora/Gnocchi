@@ -51,18 +51,18 @@
 
 #include "parser.hpp" // this is needed for symbol_type
 
+#include "LocationProvider.h"
+
 namespace Gnocchi {
 
-class Interpreter; 
-    
 class Scanner : public yyFlexLexer {
 public:
-        Scanner(Interpreter &driver) : m_driver(driver) {}
+    Scanner(LocationProvider &driver) : m_driver(driver) {}
 	virtual ~Scanner() {}
 	virtual Gnocchi::Parser::symbol_type get_next_token();
         
 private:
-    Interpreter &m_driver;
+    LocationProvider &m_driver;
 };
 
 }
