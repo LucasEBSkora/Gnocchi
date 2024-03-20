@@ -40,7 +40,7 @@ foreach(testfile ${UNIT_TESTS_SOURCES})
 		${testfile}
 	)
 
-	target_link_libraries(${SUITE_NAME} gtest_main ModularNOPGraph CompilerSources)
+	target_link_libraries(${SUITE_NAME} gtest_main CompilerSources)
 
 	set_target_properties(${SUITE_NAME} PROPERTIES
 		CXX_STANDARD 20
