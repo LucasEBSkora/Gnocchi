@@ -26,18 +26,34 @@ flex_target(lexer
 
 add_flex_bison_dependency(lexer parser)
 
-include_directories(${SOURCE_DIR}/front)
-include_directories(${SOURCE_DIR})
-include_directories(${GENERATED_DIRECTORY})
-
-add_executable(Gnocchi
-    ${GENERATED_DIRECTORY}/parser.cpp
-    ${GENERATED_DIRECTORY}/scanner.cpp
-    ${SOURCE_DIR}/front/interpreter.cpp
-    ${SOURCE_DIR}/main.cpp
+set(GNOCCHI_COMPILER_INCLUDES
+    ${SOURCE_DIR}/front
+    ${SOURCE_DIR}
+    ${GENERATED_DIRECTORY}
 )
+
+file(GLOB GNOCCHI_COMPILER_SOURCES
+    ${GENERATED_DIRECTORY}/scanner.cpp
+    ${GENERATED_DIRECTORY}/parser.cpp
+    ${SOURCE_DIR}/front/*.cpp
+)
+
+add_library(CompilerSources STATIC ${GNOCCHI_COMPILER_SOURCES})
+target_include_directories(CompilerSources PUBLIC ${GNOCCHI_COMPILER_INCLUDES})
+set_target_properties(CompilerSources PROPERTIES
+    CXX_STANDARD 20
+)
+
+add_executable(Gnocchi ${SOURCE_DIR}/main.cpp)
+
+target_link_libraries(Gnocchi CompilerSources)
+
+set(CMAKE_BUILD_TYPE Debug)
 
 set_target_properties(Gnocchi PROPERTIES 
     CXX_STANDARD 20
     OUTPUT_NAME gnocchi
 )
+
+enable_testing()
+add_subdirectory(unittests)
