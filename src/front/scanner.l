@@ -99,10 +99,25 @@ notify {
 	return Gnocchi::Parser::make_NOTIFY(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
+read {
+	return Gnocchi::Parser::make_READ(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
 listen {
 	return Gnocchi::Parser::make_LISTEN(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
+initialise {
+	return Gnocchi::Parser::make_INITIALISE(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+holon {
+	return Gnocchi::Parser::make_HOLON(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+int {
+	return Gnocchi::Parser::make_INT(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
 
 int8 {
 	return Gnocchi::Parser::make_INT8(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
@@ -120,6 +135,9 @@ int32 {
 	return Gnocchi::Parser::make_INT32(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
+uint {
+	return Gnocchi::Parser::make_UINT(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
 
 uint8 {
 	return Gnocchi::Parser::make_UINT8(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
@@ -135,6 +153,10 @@ uint24 {
 
 uint32 {
 	return Gnocchi::Parser::make_UINT32(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+float {
+	return Gnocchi::Parser::make_FLOAT(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
 
@@ -154,6 +176,10 @@ char {
 	return Gnocchi::Parser::make_CHAR(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
+ref {
+	return Gnocchi::Parser::make_REF(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
 to {
 	return Gnocchi::Parser::make_TO(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
@@ -166,8 +192,8 @@ same {
 	return Gnocchi::Parser::make_SAME(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
-head {
-	return Gnocchi::Parser::make_HEAD(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+as {
+	return Gnocchi::Parser::make_AS(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
 ";" {
@@ -207,17 +233,16 @@ head {
 	return Gnocchi::Parser::make_RCBRACKET(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
-
-"-" {
-	return Gnocchi::Parser::make_MINUS(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+"->" {
+	return Gnocchi::Parser::make_NOTIFY_OP(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
 "..." {
 	return Gnocchi::Parser::make_ELLIPSIS(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
-"<" {
-	return Gnocchi::Parser::make_LT(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+"<>" {
+	return Gnocchi::Parser::make_HOLON_OP(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
 ":=" {
@@ -347,6 +372,11 @@ head {
 "--" {
 	return Gnocchi::Parser::make_DEC(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
+
+"." {
+	return Gnocchi::Parser::make_DOT(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
 
 "'" {
 	return Gnocchi::Parser::make_APOSTROPHE(Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));

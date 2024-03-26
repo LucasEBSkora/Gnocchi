@@ -78,6 +78,7 @@
 
 %token READ "read";
 %token LISTEN "listen";
+%token NOTIFY "notify";
 
 %token INITIALISE "initialise"
 
@@ -132,7 +133,7 @@
 %token RCBRACKET "}";
 
 /* operators */
-%token NOTIFY "->"
+%token NOTIFY_OP "->"
 %token ELLIPSIS "..."
 %token HOLON_OP "<>"
 
