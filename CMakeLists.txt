@@ -33,12 +33,14 @@ set(GNOCCHI_COMPILER_INCLUDES
 )
 
 file(GLOB GNOCCHI_COMPILER_SOURCES
-    ${GENERATED_DIRECTORY}/scanner.cpp
-    ${GENERATED_DIRECTORY}/parser.cpp
     ${SOURCE_DIR}/front/*.cpp
 )
 
-add_library(CompilerSources STATIC ${GNOCCHI_COMPILER_SOURCES})
+add_library(CompilerSources STATIC 
+    ${GENERATED_DIRECTORY}/scanner.cpp
+    ${GENERATED_DIRECTORY}/parser.cpp
+    ${GNOCCHI_COMPILER_SOURCES}
+)
 target_include_directories(CompilerSources PUBLIC ${GNOCCHI_COMPILER_INCLUDES})
 set_target_properties(CompilerSources PROPERTIES
     CXX_STANDARD 20
