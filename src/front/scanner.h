@@ -40,7 +40,7 @@
 #if ! defined(yyFlexLexerOnce)
 #undef yyFlexLexer
 #define yyFlexLexer Gnocchi_FlexLexer // the trick with prefix; no namespace here :(
-#include <FlexLexer.h>
+#include "FlexLexer.h"
 #endif
 
 // Scanner method signature is defined by this macro. Original yylex() returns int.
