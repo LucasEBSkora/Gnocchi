@@ -8,7 +8,7 @@ using SimpleTokenParam = std::tuple<Gnocchi::Parser::symbol_kind_type, const cha
 namespace Gnocchi
 {
 
-  class ScannerTest : public testing::Test, public testing::WithParamInterface<SimpleTokenParam>
+  class SimpleTokensScannerTest : public testing::Test, public testing::WithParamInterface<SimpleTokenParam>
   {
   public:
     Scanner *obj;
@@ -25,27 +25,6 @@ namespace Gnocchi
       delete obj;
     }
 
-    void testCreateScanner()
-    {
-      ASSERT_NE(nullptr, obj);
-    }
-
-    void testSwitchStream()
-    {
-      std::stringstream stream;
-      stream << "";
-      obj->switch_streams(&stream, nullptr);
-      ASSERT_EQ(0, obj->get_next_token().kind());
-
-      stream << "+ *";
-      ASSERT_EQ(Parser::symbol_kind_type::S_PLUS, obj->get_next_token().kind());
-
-      std::stringstream stream2;
-      stream2 << "";
-      obj->switch_streams(&stream2, nullptr);
-      ASSERT_EQ(0, obj->get_next_token().kind());
-    }
-
     void testIdentifySimpleTokenType(Parser::symbol_kind_type type, const char *token)
     {
       std::stringstream stream;
@@ -55,17 +34,7 @@ namespace Gnocchi
     }
   };
 
-  TEST_F(ScannerTest, testCreateScanner)
-  {
-    this->testCreateScanner();
-  }
-
-  TEST_F(ScannerTest, testSwitchStream)
-  {
-    this->testSwitchStream();
-  }
-
-  TEST_P(ScannerTest, testIdentifySimpleTokenType)
+  TEST_P(SimpleTokensScannerTest, testIdentifySimpleTokenType)
   {
     SimpleTokenParam p = GetParam();
     this->testIdentifySimpleTokenType(std::get<0>(p), std::get<1>(p));
@@ -159,7 +128,7 @@ namespace Gnocchi
       {Parser::symbol_kind_type::S_APOSTROPHE, "'", "testIdentifyApostrophe"},
   };
 
-  INSTANTIATE_TEST_SUITE_P(testIdentifyPunctiationOperatorsKeywords, ScannerTest,
+  INSTANTIATE_TEST_SUITE_P(testIdentifyPunctiationOperatorsKeywords, SimpleTokensScannerTest,
                            testing::ValuesIn(simpleTokenPairs), [](const testing::TestParamInfo<SimpleTokenParam> &info)
                            { return std::get<2>(info.param); });
 }
