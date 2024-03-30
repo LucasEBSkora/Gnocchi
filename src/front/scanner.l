@@ -443,6 +443,11 @@ as {
         case 'v':
             escape_char = '\v';
             break;
+        case '0':
+            escape_char = '\0';
+            break;
+        default:
+            LexerError("unrecognized scape character!");
     }
     return Gnocchi::Parser::make_CHAR_LITERAL(escape_char, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
@@ -463,6 +468,7 @@ as {
 
 
 {identifier} {
+    return Gnocchi::Parser::make_IDENTIFIER(yytext, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
 . {

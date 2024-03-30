@@ -55,12 +55,22 @@
 
 namespace Gnocchi {
 
+class LexicalException : std::runtime_error {
+
+public:
+  LexicalException(std::string msg) : std::runtime_error( msg) {}
+
+};
+
+
 class Scanner : public yyFlexLexer {
 public:
     Scanner(LocationProvider &driver) : m_driver(driver) {}
 	virtual ~Scanner() {}
 	virtual Gnocchi::Parser::symbol_type get_next_token();
-        
+  virtual void LexerError(const char* msg) {
+    throw LexicalException(msg);
+  }
 private:
     LocationProvider &m_driver;
 };
