@@ -29,6 +29,7 @@
 
 integer_literal   [-+]?[0-9]+
 char_literal	'.'
+escape_char_literal	'\\.'
 string_literal \".*\"
 double_literal {integer_literal}\.[0-9]+
 float_literal {double_literal}f
@@ -404,6 +405,46 @@ as {
 
 {char_literal} {
 	return Gnocchi::Parser::make_CHAR_LITERAL(yytext[1], Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+{escape_char_literal} {
+    char escape_char;
+    switch(yytext[2]) {
+        case '\'':
+            escape_char = '\'';
+            break;
+        case '\"':
+            escape_char = '\"';
+            break;
+        case '?':
+            escape_char = '?';
+            break;
+        case '\\':
+            escape_char = '\\';
+            break;
+        case 'a':
+            escape_char = '\a';
+            break;
+        case 'b':
+            escape_char = '\b';
+            break;
+        case 'f':
+            escape_char = '\f';
+            break;
+        case 'n':
+            escape_char = '\n';
+            break;
+        case 'r':
+            escape_char = '\r';
+            break;
+        case 't':
+            escape_char = '\t';
+            break;
+        case 'v':
+            escape_char = '\v';
+            break;
+    }
+    return Gnocchi::Parser::make_CHAR_LITERAL(escape_char, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
 {string_literal} {
