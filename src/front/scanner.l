@@ -416,9 +416,6 @@ as {
         case '\"':
             escape_char = '\"';
             break;
-        case '?':
-            escape_char = '?';
-            break;
         case '\\':
             escape_char = '\\';
             break;
