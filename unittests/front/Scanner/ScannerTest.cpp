@@ -42,14 +42,6 @@ namespace Gnocchi
       obj->switch_streams(&stream2, nullptr);
       ASSERT_EQ(0, obj->get_next_token().kind());
     }
-
-    void testIdentifySimpleTokenType(Parser::symbol_kind_type type, const char *token)
-    {
-      std::stringstream stream;
-      stream << token;
-      obj->switch_streams(&stream, nullptr);
-      ASSERT_EQ(type, obj->get_next_token().kind());
-    }
   };
 
   TEST_F(ScannerTest, testCreateScanner)

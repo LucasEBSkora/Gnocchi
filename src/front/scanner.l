@@ -2,6 +2,7 @@
 	#include <iostream>
 	#include <cstdlib>
 	#include <string>
+	#include <cmath>
 	#include "scanner.h"
 	#include "interpreter.h"
 	#include "parser.hpp"
@@ -27,12 +28,20 @@
 %option prefix="Gnocchi_"
 %option yylineno
 
-integer_literal   [-+]?[0-9]+
+unsigned_integer_literal [0-9]+
+unsigned_integer_binary_literal 0b[0-1]+
+unsigned_integer_octal_literal 0o[0-7]+
+unsigned_integer_hex_literal 0x[0-9a-fA-F]+
+unsigned_integer_literal_exponent [0-9]+[eE][0-9]{1,2}
+signed_integer_literal_exponent [-+]{unsigned_integer_literal_exponent}
+signed_integer_literal   [-+]{unsigned_integer_literal}
 char_literal	'.'
 escape_char_literal	'\\.'
 string_literal \".*\"
-double_literal {integer_literal}\.[0-9]+
+double_literal [-+]?[0-9]+\.[0-9]+
+exponent_double_literal {double_literal}[eE][-+]?[0-9]+
 float_literal {double_literal}f
+exponent_float_literal {exponent_double_literal}f
 identifier      [a-zA-Z\_]([a-zA-Z0-9\_])*
 %%
 
@@ -390,9 +399,43 @@ as {
 [\t ] {
 }
 
-{integer_literal} {
-	int integer = std::atoi(yytext);
-	return Gnocchi::Parser::make_INTEGER_LITERAL(integer, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+{signed_integer_literal} {
+	long long integer = std::atoll(yytext);
+	return Gnocchi::Parser::make_SIGNED_INTEGER_LITERAL(integer, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+{unsigned_integer_literal} {
+	unsigned long long integer = std::strtoull(yytext, nullptr, 10);
+	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+{unsigned_integer_binary_literal} {
+	unsigned long long integer = std::strtoull(yytext + 2, nullptr, 2);
+	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+{unsigned_integer_octal_literal} {
+	unsigned long long integer = std::strtoull(yytext + 2, nullptr, 8);
+	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+{unsigned_integer_hex_literal} {
+	unsigned long long integer = std::strtoull(yytext + 2, nullptr, 16);
+	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+{unsigned_integer_literal_exponent} {
+	char* exp;
+	unsigned long long integer = std::strtoull(yytext, &exp, 10);
+	integer *= pow(10, std::strtoull(exp+1, nullptr, 10));
+	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
+{signed_integer_literal_exponent} {
+	char* exp;
+	long long integer = std::strtoll(yytext, &exp, 10);
+	integer *= pow(10, std::strtoll(exp+1, nullptr, 10));
+	return Gnocchi::Parser::make_SIGNED_INTEGER_LITERAL(integer, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
 "true" {
@@ -458,11 +501,24 @@ as {
 	return Gnocchi::Parser::make_DOUBLE_LITERAL(value, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
+{exponent_double_literal} {
+	char* exp;
+	double value = std::strtod(yytext, &exp);
+	value *= pow(10, std::strtod(exp+1, nullptr));
+	return Gnocchi::Parser::make_DOUBLE_LITERAL(value, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
+
 {float_literal} {
 	float value = std::atof(yytext);
 	return Gnocchi::Parser::make_FLOAT_LITERAL(value, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
 }
 
+{exponent_float_literal} {
+	char* exp;
+	float value = std::strtof(yytext, &exp);
+	value *= pow(10, std::strtof(exp+1, nullptr));
+	return Gnocchi::Parser::make_FLOAT_LITERAL(value, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));
+}
 
 {identifier} {
     return Gnocchi::Parser::make_IDENTIFIER(yytext, Gnocchi::location(m_driver.getFileName(), yylineno, m_driver.getLocationCol()));

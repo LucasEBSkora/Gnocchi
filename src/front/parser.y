@@ -113,7 +113,8 @@
 %token AS "as";
 
 /* Literals */
-%token <int> INTEGER_LITERAL;
+%token <long long> SIGNED_INTEGER_LITERAL;
+%token <unsigned long long> UNSIGNED_INTEGER_LITERAL;
 %token <bool> BOOL_LITERAL;
 %token <char> CHAR_LITERAL;
 %token <std::string> STRING_LITERAL;
@@ -203,7 +204,7 @@ declare_statement : "declare" IDENTIFIER ";" {
                   }
                   | "declare" IDENTIFIER "=" expression ";" {
                   }
-                  | "declare" IDENTIFIER "[" INTEGER_LITERAL "]" ";"{
+                  | "declare" IDENTIFIER "[" UNSIGNED_INTEGER_LITERAL "]" ";"{
                   };
 
 delete_statement : "delete" IDENTIFIER ";"{
@@ -223,7 +224,7 @@ expression : IDENTIFIER {
             } 
             | IDENTIFIER "[" expression "]" {
             }
-            | INTEGER_LITERAL {
+            | UNSIGNED_INTEGER_LITERAL {
             }
             | expression "+" expression {
             }
