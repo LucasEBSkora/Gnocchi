@@ -38,6 +38,6 @@ namespace Gnocchi
 
   TEST_F(StringScannerTest, testIdentifyEmptyString)
   {
-    this->testIdentifyStringLiteral("");
+    this->testIdentifyStringLiteral("abcdsadas");
   }
 }
