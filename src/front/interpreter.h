@@ -38,27 +38,27 @@
 
 namespace Gnocchi {
 
-class Interpreter
-{
-public:
+  class Interpreter {
+  public:
     Interpreter(std::string fileName);
-    
+
     int parse();
-    
+
     void clear();
-    
+
     void switchInputStream(std::istream *is);
 
     friend class Parser;
+
     friend class Scanner;
 
-private:
+  private:
     LocationProvider locationProvider;
     Scanner m_scanner;
     Parser m_parser;
 
-    
-};
+
+  };
 
 }
 

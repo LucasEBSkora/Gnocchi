@@ -494,8 +494,7 @@ as {
 }
 
 {string_literal} {
-    std::string str{yytext+1, strlen(yytext) - 2};
-	return Gnocchi::Parser::make_STRING_LITERAL(str, getLoc());
+	return Gnocchi::Parser::make_STRING_LITERAL(parseString(yytext), getLoc());
 }
 
 {double_literal} {

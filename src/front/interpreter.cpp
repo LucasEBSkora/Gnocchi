@@ -33,24 +33,20 @@
 using namespace Gnocchi;
 
 Interpreter::Interpreter(std::string filename) : locationProvider{filename}, m_scanner(locationProvider),
-                                                 m_parser(m_scanner, *this/*, stmts*/)
-{
+                                                 m_parser(m_scanner, *this/*, stmts*/) {
 }
 
-int Interpreter::parse()
-{
-    locationProvider.reset();
-    return m_parser.parse();
+int Interpreter::parse() {
+  locationProvider.reset();
+  return m_parser.parse();
 }
 
-void Interpreter::clear()
-{
-    locationProvider.reset();
+void Interpreter::clear() {
+  locationProvider.reset();
 }
 
-void Interpreter::switchInputStream(std::istream *is)
-{
-    m_scanner.switch_streams(is, NULL);
+void Interpreter::switchInputStream(std::istream *is) {
+  m_scanner.switch_streams(is, NULL);
 }
 
 // std::vector<Statement *>& Interpreter::getStmts()

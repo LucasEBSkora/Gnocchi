@@ -47,6 +47,7 @@ add_library(CompilerSources STATIC
     ${GENERATED_DIRECTORY}/scanner.cpp
     ${GENERATED_DIRECTORY}/parser.cpp
     ${GNOCCHI_COMPILER_SOURCES}
+        src/front/scanner_utils.cpp
 )
 target_include_directories(CompilerSources PUBLIC ${GNOCCHI_COMPILER_INCLUDES})
 set_target_properties(CompilerSources PROPERTIES
