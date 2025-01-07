@@ -28,6 +28,8 @@ add_flex_bison_dependency(lexer parser)
 
 set(GNOCCHI_COMPILER_INCLUDES
     ${SOURCE_DIR}/front
+    ${SOURCE_DIR}/graph
+    ${SOURCE_DIR}/graph/type
     ${SOURCE_DIR}
     ${GENERATED_DIRECTORY}
 )
@@ -41,13 +43,15 @@ endif()
 
 file(GLOB GNOCCHI_COMPILER_SOURCES
     ${SOURCE_DIR}/front/*.cpp
+    ${SOURCE_DIR}/graph/*.cpp
+    ${SOURCE_DIR}/graph/type/*.cpp
 )
 
 add_library(CompilerSources STATIC 
     ${GENERATED_DIRECTORY}/scanner.cpp
     ${GENERATED_DIRECTORY}/parser.cpp
     ${GNOCCHI_COMPILER_SOURCES}
-        src/front/scanner_utils.cpp
+    src/front/scanner_utils.cpp
 )
 target_include_directories(CompilerSources PUBLIC ${GNOCCHI_COMPILER_INCLUDES})
 set_target_properties(CompilerSources PROPERTIES
