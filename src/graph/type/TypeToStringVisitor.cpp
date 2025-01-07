@@ -1,6 +1,8 @@
 #include "TypeToStringVisitor.h"
 
 #include "PrimitiveType.h"
+#include "ArrayType.h"
+
 namespace EN
 {
 
@@ -65,5 +67,14 @@ namespace EN
         }
 
         ss << stringValue;
+    }
+
+    void TypeToStringVisitor::visit(const ArrayType &type)
+    {
+        type.baseType.accept(*this);
+        for (int dimension : type.dimensions)
+        {
+            ss << '[' << dimension << ']';
+        }
     }
 }

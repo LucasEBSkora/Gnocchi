@@ -1,182 +1,65 @@
 @startuml "class"
 
-skinparam linetype polyline
-package model {
-  class User {
-    + password: String
-    + florains: SimpleIntegerProperty
-    + transactionsExt: Map<Integer, Integer>
-    + pendingNotifications: ObservableList<Integer>
-    + username: String
-    + UID: int
-    + transactionsIn: Map<Integer, Integer>
-    + conversations: ObservableList<Integer>
-    + address: String
-    + sleepMode: boolean
-    + imgpath: String
-    + email: String
-    + createTransaction(Ad): int
-    + getFlorains(): int
-    + setFlorains(int): void
-  }
-  User o-- Ad
+package en {
+  package graph {
+    package type {
+      abstract class Type {
+        + toString() : string
+        {abstract} + accept(visit: TypeVisitor)
+      }
 
-  Enum AdType {
-    SERVICE
-    GOOD
-  }
+      class PrimitiveType extends Type {
+        {static} flyweightMap : map<Primitive, PrimitiveType>
+        {static} + getPrimitiveType(value: Primitive) : PrimitiveType
+        + accept(visit: TypeVisitor)
+        - PrimitiveType(value: Primitive)
+      }
 
-  class Ad {
-  + name: String
-  + disponibilities: String
-  + imagePath: String
-  + end: Date
-  + offer: boolean
-  + ID: int
-  + duration: int
-  + start: Date
-  + type: AdType
-  + description: String
-  + maxDistance: double
-  + address: String
-  + userID: int
-  + cost: int
+      PrimitiveType "1" *--> "1" Primitive
+
+      enum Primitive {
+        INT8
+        INT16
+        INT24
+        INT32
+        INT
+        UIT8
+        UINT16
+        UINT24
+        UINT32
+        UINT
+        FLOAT
+        DOUBLE
+        NUMBER
+        BOOL
+        CHAR
+      }
+
+      class ArrayType extends Type {
+        + dimensions: vector<int>
+        + accept(visit: TypeVisitor)
+        + ArrayType(baseType, vector<int> dimensions)
+      }
+
+      ArrayType o--> "1" Type
+
+      interface TypeVisitor {
+        {abstract} + visit(type: PrimitiveType)
+        {abstract} + visit(type: ArrayType)
+      }
+
+      TypeVisitor .. Type : visits
+
+      class TypeToStringVisitor implements TypeVisitor {
+        {abstract} + visit(type: PrimitiveType)
+        {abstract} + visit(type: ArrayType)
+        getResult(): string
+      }
+
+    }
+
+    class Graph
+    class Vertex
+  }
 }
-  Ad o--> AdType
-
-  interface Database << interface >> {
-    + getConversation(int): Conversation
-    + getUser(String): User
-    + removeNotification(User, Integer): void
-    + getUser(int): User
-    + authenticate(String, String): int
-    + addAd(Ad): int
-    + saveImage(String): String
-    + sendMessage(int, int, String): int
-    + getTransaction(int): Transaction
-    + addTransaction(Transaction): int
-    + addNotification(User, Integer): void
-    + isUsernameAvailable(String): boolean
-    + getAd(int): Ad
-    + getAdsAsList(): ObservableList<Ad>
-    + addUser(User): int
-    + saveStatus(Transaction, StatusType): void
-    + getConversation(int, int): Conversation
-  }
-
-  class JSONDatabase {
-    - {static} JSONDatabase instance
-    + {static} Database getInstance()
-    - int getNewUserID()
-    - int getNewAdID()
-    - int getNewConversationID()
-    - Path getPathToDbFile()
-    - void save()
-    - JSONDatabaseMemento toMemento()
-    + String asJSON()
-    - void load()
-    - void loadFromJSON(String dbString)
-    - void loadFromMemento(JSONDatabaseMemento m)
-    - Path getPathToFile(String name)
-    + String asJSON()
-  }
-
-  class DatabaseVilles {
-    + getCities(): List<Ville>
-    + setCities(List<Ville>): void
-  }
-
-  DatabaseVilles.. Distance
-
-  class Distance {
-    - villes: Map<String, Ville>
-    + calculerDistance(String, String): double
-    - haversine(double, double, double, double): double
-    - loadCities(): void
-    + getNomsVilles(): List<String>
-  }
-
-  class Message {
-    + int id
-    + String text
-    + boolean equals(Object other)
-    + String toString()
-  }
-
-  class Conversation {
-    + Set<Integer> userIds;
-    + boolean userInConversation(int id)
-    + ObservableList<Message> getMessages()
-    + Set<Integer> getUserIds()
-    + addMessage(int id, String message)
-    + int getOtherUser(int id)
-  }
-
-  enum StatusType << enumeration >> {
-    + NEUTRAL: 
-    + COMPLETED: 
-    + RESERVED: 
-    + ACCEPTED: 
-    + REFUSED: 
-    + values(): StatusType[]
-    + valueOf(String): StatusType
-  }
-
-  class Transaction {
-    + UID: int
-    + statusType: StatusType
-    + ID: int
-    + adID: int
-  }
-
-  class Ville {
-    - label: String
-    - longitude: String
-    - region_name: String
-    - city_code: String
-    - department_name: String
-    - region_geojson_name: String
-    - zip_code: String
-    - departement_number: String
-    - insee_code: String
-    - latitude: String
-  }
-
-
-  Conversation --> Message
-
-  JSONDatabase --> IntSupplier
-  JSONDatabase ..|> Database
-  JSONDatabase --> User
-  JSONDatabase --> Ad
-  JSONDatabase --> Conversation
-  interface IntSupplier {
-    + int getAsInt()
-  }
-
-  DatabaseVilles --> Ville
-
-
-  Transaction o--> StatusType
-  JSONDatabaseMemento --> Transaction
-
-  JSONDatabase --> Transaction
-  JSONDatabaseMemento --> User
-  JSONDatabaseMemento --> Ad
-  JSONDatabaseMemento --> Conversation
-
-  RandomIDSupplier ..|> IntSupplier
-  User ..> Transaction
-  User ..> Conversation
-
-  JSONDatabase ..> MessageListDesserializer
-
-  MessageListDesserializer ..|> JsonbDeserializer : "T = ObservableList<Message>"
-  IntegerObservableListDesserializer ..|>   JsonbDeserializer: "T = <ObservableList<Integer>>""
-  interface "JsonbDeserializer<T>" as JsonbDeserializer {
-    + T deserialize(JsonParser parser, DeserializationContext ctx, Type rtType)
-  }
-
-}
-
 @enduml

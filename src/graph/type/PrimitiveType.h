@@ -34,7 +34,7 @@ namespace EN
         static const PrimitiveType &getPrimitiveType(Primitive value);
         virtual void accept(TypeVisitor &visit) const override;
         virtual ~PrimitiveType();
-        Primitive value;
+        const Primitive value;
 
     private:
         PrimitiveType(Primitive value);
