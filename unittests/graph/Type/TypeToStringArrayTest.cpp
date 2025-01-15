@@ -14,8 +14,8 @@ namespace EN
   public:
     void testTypeToStringPrimitive(EN::PrimitiveType::Primitive type, const char *expected)
     {
-      const PrimitiveType &typeInst = PrimitiveType::getPrimitiveType(type);
-      ASSERT_EQ(expected, typeInst.toString());
+      const std::weak_ptr<Type> typeInst = PrimitiveType::getPrimitiveType(type);
+      ASSERT_EQ(expected, typeInst.lock()->toString());
     }
   };
 

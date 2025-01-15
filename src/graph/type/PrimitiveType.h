@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 #include "ENType.h"
 
@@ -31,14 +32,15 @@ namespace EN
             CHAR,
         };
 
-        static const PrimitiveType &getPrimitiveType(Primitive value);
+        static const std::weak_ptr<PrimitiveType> getPrimitiveType(Primitive value);
         virtual void accept(TypeVisitor &visit) const override;
         virtual ~PrimitiveType();
         const Primitive value;
+        // Public just so we can use make_shared on this without any tricks, not to be used
+        PrimitiveType(Primitive value);
 
     private:
-        PrimitiveType(Primitive value);
-        static std::map<Primitive, PrimitiveType> flyweightMap;
+        static std::map<Primitive, std::shared_ptr<PrimitiveType>> flyweightMap;
     };
 
 }

@@ -10,7 +10,7 @@ namespace EN
     };
 
     ArrayType::~ArrayType() {}
-    ArrayType::ArrayType(const Type &baseType, std::vector<unsigned int> dimensions)
+    ArrayType::ArrayType(const std::weak_ptr<Type> baseType, std::vector<unsigned int> dimensions)
         : baseType{baseType}, dimensions{dimensions} {}
 
 }

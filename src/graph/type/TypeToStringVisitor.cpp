@@ -71,7 +71,7 @@ namespace EN
 
     void TypeToStringVisitor::visit(const ArrayType &type)
     {
-        type.baseType.accept(*this);
+        type.baseType.lock()->accept(*this);
         for (int dimension : type.dimensions)
         {
             ss << '[' << dimension << ']';

@@ -10,7 +10,7 @@ namespace EN
   public:
     void testOneDArrayToString()
     {
-      const Type &charType = PrimitiveType::getPrimitiveType(PrimitiveType::CHAR);
+      const std::weak_ptr<Type> charType = PrimitiveType::getPrimitiveType(PrimitiveType::CHAR);
       const ArrayType array(charType, {10});
       std::string str = array.toString();
       ASSERT_EQ(str, "char[10]");

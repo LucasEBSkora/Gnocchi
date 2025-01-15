@@ -7,12 +7,12 @@
 namespace EN
 {
 
-    std::map<PrimitiveType::Primitive, PrimitiveType> PrimitiveType::flyweightMap;
+    std::map<PrimitiveType::Primitive, std::shared_ptr<PrimitiveType>> PrimitiveType::flyweightMap;
 
-    const PrimitiveType &PrimitiveType::getPrimitiveType(Primitive value)
+    const std::weak_ptr<PrimitiveType> PrimitiveType::getPrimitiveType(Primitive value)
     {
         if (flyweightMap.find(value) == flyweightMap.end())
-            flyweightMap.insert({value, PrimitiveType{value}});
+            flyweightMap.emplace(value, std::make_shared<PrimitiveType>(value));
 
         return flyweightMap.at(value);
     }
