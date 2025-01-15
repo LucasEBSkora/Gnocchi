@@ -12,7 +12,7 @@ package en {
         {static} flyweightMap : map<Primitive, PrimitiveType>
         {static} + getPrimitiveType(value: Primitive) : PrimitiveType
         + accept(visit: TypeVisitor)
-        - PrimitiveType(value: Primitive)
+        + PrimitiveType(value: Primitive)
       }
 
       PrimitiveType "1" *--> "1" Primitive
@@ -48,11 +48,61 @@ package en {
         {abstract} + visit(type: ArrayType)
       }
 
-      TypeVisitor .. Type : visits
+      TypeVisitor ..> Type : visits
 
       class TypeToStringVisitor implements TypeVisitor {
+        - ss: stringstream
         {abstract} + visit(type: PrimitiveType)
         {abstract} + visit(type: ArrayType)
+        getResult(): string
+      }
+
+    }
+
+    package expr {
+      abstract class Expr {
+        +toString() : string
+        {abstract} + accept(visit: ExprVisitor)
+        + ~Expr()
+      }
+
+      enum Literal {
+        INT
+        FLOAT
+        DOUBLE
+        CHAR
+        STRING
+        BOOL
+      }
+
+
+      class LiteralExpr extends Expr {
+        + LiteralExpr(value: literalVariant)
+        + ~LiteralExpr()
+        + accept(visit: ExprVisitor)
+        getLiteralType() : Literal 
+        getInt() : long long 
+        getFloat() : float 
+        getDouble() : double 
+        getChar() : char 
+        getString() : string 
+        getBool() : bool 
+        get() : LiteralVariant
+      }
+
+      LiteralExpr *--> Literal
+
+      note left of LiteralExpr : "using LiteralVariant = std::variant<long long, float, double, char, std::string, bool>;"
+
+      interface ExprVisitor {
+        {abstract} + visit(expr: LiteralExpr)
+      }
+
+      ExprVisitor ..> Expr : visits
+
+      class ExprToStringVisitor implements ExprVisitor {
+        - ss: stringstream
+        {abstract} + visit(type: LiteralExpr)
         getResult(): string
       }
 

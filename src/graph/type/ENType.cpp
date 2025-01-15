@@ -3,8 +3,6 @@
 #include "TypeVisitor.h"
 #include "TypeToStringVisitor.h"
 
-#include <sstream>
-
 namespace EN
 {
 

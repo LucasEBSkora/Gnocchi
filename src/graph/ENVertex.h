@@ -1,5 +1,4 @@
-#ifndef __EN_VERTEX_H__
-#define __EN_VERTEX_H__
+#pragma once
 
 #include "ENTypes.h"
 
@@ -9,5 +8,3 @@ namespace EN
     {
     };
 }
-
-#endif

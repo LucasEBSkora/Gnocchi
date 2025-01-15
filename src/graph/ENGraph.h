@@ -1,5 +1,4 @@
-#ifndef __EN_GRAPH_H__
-#define __EN_GRAPH_H__
+#pragma once
 
 #include <vector>
 #include "ENTypes.h"
@@ -10,5 +9,3 @@ namespace EN
     {
     };
 }
-
-#endif

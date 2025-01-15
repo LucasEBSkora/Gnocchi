@@ -1,5 +1,4 @@
-#ifndef __EN_PRIMITIVE_TYPE_H__
-#define __EN_PRIMITIVE_TYPE_H__
+#pragma once
 
 #include <string>
 #include <map>
@@ -44,4 +43,3 @@ namespace EN
     };
 
 }
-#endif
