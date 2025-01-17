@@ -72,9 +72,9 @@ namespace EN
     void TypeToStringVisitor::visit(const ArrayType &type)
     {
         type.baseType.lock()->accept(*this);
-        for (int dimension : type.dimensions)
+        for (std::shared_ptr<Expr> dimension : type.dimensions)
         {
-            ss << '[' << dimension << ']';
+            ss << '[' << dimension->toString() << ']';
         }
     }
 }

@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 
+#include "ENExpr.h"
+
 namespace EN
 {
     class ArrayType : public Type
@@ -12,10 +14,10 @@ namespace EN
     public:
         virtual void accept(TypeVisitor &visit) const override;
         virtual ~ArrayType();
-        ArrayType(const std::weak_ptr<Type> baseType, std::vector<unsigned int> dimensions);
+        ArrayType(const std::weak_ptr<Type> baseType, std::vector<std::shared_ptr<Expr>> dimensions);
 
         const std::weak_ptr<Type> &baseType;
-        const std::vector<unsigned int> dimensions;
+        const std::vector<std::shared_ptr<Expr>> dimensions;
     };
 
 }
