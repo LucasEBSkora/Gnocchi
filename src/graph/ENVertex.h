@@ -27,6 +27,7 @@ namespace EN
             const Visibility visibility,
             const std::vector<NotificationParameter> notificationParameters,
             const std::shared_ptr<Expr> stateExpr,
+            bool boundState,
             const std::vector<std::string> interfaces,
             const std::shared_ptr<Expr> initialValue,
             const int allowedOperations,
@@ -41,6 +42,7 @@ namespace EN
         const Visibility visibility;
         const std::vector<NotificationParameter> notificationParameters;
         const std::shared_ptr<Expr> stateExpr;
+        bool boundState;
         const std::vector<std::string> interfaces;
         const std::shared_ptr<Expr> initialValue;
         const int allowedOperations;

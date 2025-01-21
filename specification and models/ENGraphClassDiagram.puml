@@ -127,6 +127,7 @@ package en {
 
     class Vertex {
       + id : string
+      + boundState : bool
       + allowedOperations : int
       + interfaces : vector<string>
       + getEdges() : vector<Edge>

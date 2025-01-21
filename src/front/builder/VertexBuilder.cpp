@@ -34,6 +34,12 @@ namespace Gnocchi
         return *this;
     }
 
+    VertexBuilder &VertexBuilder::setBoundState(bool boundState)
+    {
+        this->boundState = boundState;
+        return *this;
+    }
+
     VertexBuilder &VertexBuilder::addInterface(std::string interface)
     {
         this->interfaces.push_back(interface);
@@ -84,6 +90,6 @@ namespace Gnocchi
 
     std::shared_ptr<Vertex> VertexBuilder::build()
     {
-        return std::make_shared<Vertex>(type, id, visibility, notificationParameters, stateExpr, interfaces, initialValue, allowedOperations, defaultWhen, defaultWith, bodyEdges);
+        return std::make_shared<Vertex>(type, id, visibility, notificationParameters, stateExpr, boundState, interfaces, initialValue, allowedOperations, defaultWhen, defaultWith, bodyEdges);
     }
 }

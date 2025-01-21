@@ -20,6 +20,7 @@ namespace Gnocchi
         VertexBuilder &setVisibility(Visibility visibility);
         VertexBuilder &addNotificationParameter(NotificationParameter notificationParameter);
         VertexBuilder &setStateExpr(std::shared_ptr<Expr> stateExpr);
+        VertexBuilder &setBoundState(bool boundState);
         VertexBuilder &addInterface(std::string interface);
         VertexBuilder &setInitialValue(std::shared_ptr<Expr> initialValue);
         VertexBuilder &enableAllOperations();
@@ -37,6 +38,7 @@ namespace Gnocchi
         Visibility visibility;
         std::vector<NotificationParameter> notificationParameters;
         std::shared_ptr<Expr> stateExpr;
+        bool boundState;
         std::vector<std::string> interfaces;
         std::shared_ptr<Expr> initialValue;
         int allowedOperations;

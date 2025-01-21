@@ -28,6 +28,7 @@ namespace Gnocchi
       ASSERT_EQ(Visibility::DEFAULT, v->visibility);
       ASSERT_EQ(0, v->notificationParameters.size());
       ASSERT_FALSE(v->stateExpr);
+      ASSERT_FALSE(v->boundState);
       ASSERT_EQ(0, v->interfaces.size());
       ASSERT_FALSE(v->initialValue);
       ASSERT_EQ(int(AllowedOperations::ALL), v->allowedOperations);
@@ -74,6 +75,13 @@ namespace Gnocchi
       std::shared_ptr<Vertex> v = obj->build();
       ASSERT_TRUE(v->stateExpr);
       ASSERT_EQ("20", v->stateExpr->toString());
+    }
+
+    void testsetBoundState()
+    {
+      obj->setBoundState(true);
+      std::shared_ptr<Vertex> v = obj->build();
+      ASSERT_TRUE(v->boundState);
     }
 
     void testAddInterface()
@@ -154,6 +162,7 @@ namespace Gnocchi
   VERTEX_BUILDER_TEST(testSetVisibility)
   VERTEX_BUILDER_TEST(testAddNotificationparameter)
   VERTEX_BUILDER_TEST(testSetStateExpr)
+  VERTEX_BUILDER_TEST(testsetBoundState)
   VERTEX_BUILDER_TEST(testAddInterface)
   VERTEX_BUILDER_TEST(testSetInitialValue)
   VERTEX_BUILDER_TEST(testDisableAllOperations)
