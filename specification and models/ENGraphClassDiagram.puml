@@ -1,7 +1,9 @@
 @startuml "class"
 
 package en {
+
   package graph {
+
     package type {
       abstract class Type {
         + toString() : string
@@ -63,7 +65,6 @@ package en {
       abstract class Expr {
         +toString() : string
         {abstract} + accept(visit: ExprVisitor)
-        + ~Expr()
       }
 
       enum Literal {
@@ -77,16 +78,14 @@ package en {
 
 
       class LiteralExpr extends Expr {
-        + LiteralExpr(value: literalVariant)
-        + ~LiteralExpr()
         + accept(visit: ExprVisitor)
-        getLiteralType() : Literal 
-        getInt() : long long 
-        getFloat() : float 
-        getDouble() : double 
-        getChar() : char 
-        getString() : string 
-        getBool() : bool 
+        getLiteralType() : Literal
+        getInt() : long long
+        getFloat() : float
+        getDouble() : double
+        getChar() : char
+        getString() : string
+        getBool() : bool
         get() : LiteralVariant
       }
 
@@ -108,8 +107,47 @@ package en {
 
     }
 
+    enum Visibility
+    {
+      PRIVATE
+      PUBLIC
+      DEFAULT
+    }
+
     class Graph
-    class Vertex
+
+    enum AllowedOperations
+    {
+      READ
+      WRITE
+      NOTIFY
+    }
+
+    class Vertex {
+      + id : string
+      + allowedOperations : int
+      + interfaces : vector<string>
+      + getEdges() : vector<Edge>
+    }
+
+    Vertex "1" --> "1" Visibility
+    Vertex "1" --> "1" type.Type
+    Vertex "1" --> "*" NotificationParameter
+    Vertex "1" --> "0..4" expr.Expr : stateExpr, initialValue, defaultWhen, defaultWith
+    Vertex "1" --> "*" Edge
+    Vertex .. AllowedOperations
+
+    class Edge
+
+    class NotificationParameter
+    {
+      + name: string;
+    }
+
+    NotificationParameter "1" --> "1" Type
+    NotificationParameter "1" --> "0..1" Expr : default
+
+    note top of Graph : "this diagram doesn't show constructors and destructors"
   }
 }
 @enduml

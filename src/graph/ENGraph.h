@@ -5,6 +5,13 @@
 
 namespace EN
 {
+    enum Visibility
+    {
+        PRIVATE,
+        PUBLIC,
+        DEFAULT
+    };
+
     class Graph
     {
     };
