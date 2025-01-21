@@ -144,9 +144,10 @@ namespace Gnocchi
 
     void testAddBodyEdge()
     {
-      obj->addBodyEdge(std::make_shared<Edge>());
+      obj->addBodyEdge(std::make_shared<Edge>(std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::make_shared<LiteralExpr>(10)));
       std::shared_ptr<Vertex> v = obj->build();
       ASSERT_EQ(1, v->getEdges().size());
+      ASSERT_EQ("10", v->getEdges()[0]->with->toString());
     }
   };
 

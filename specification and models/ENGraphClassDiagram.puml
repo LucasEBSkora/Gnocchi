@@ -141,6 +141,7 @@ package en {
     Vertex .. AllowedOperations
 
     class Edge
+    Edge "1" --> "2..4" expr.Expr: source, destination, when, with
 
     class NotificationParameter
     {
