@@ -9,35 +9,40 @@
 
 using namespace EN;
 
-class VertexBuilder
+namespace Gnocchi
 {
-public:
-    VertexBuilder &setType(std::weak_ptr<Type> type);
-    VertexBuilder &setId(std::string id);
-    VertexBuilder &setVisibility(Visibility visibility);
-    VertexBuilder &addNotificationParameter(NotificationParameter notificationParameter);
-    VertexBuilder &setStateExpr(std::shared_ptr<Expr> stateExpr);
-    VertexBuilder &addInterface(std::string interface);
-    VertexBuilder &setInitialValue(std::shared_ptr<Expr> initialValue);
-    VertexBuilder &enableAllOperations();
-    VertexBuilder &disableAllOperations();
-    VertexBuilder &toggleOperationEnabled(AllowedOperations op);
-    VertexBuilder &setDefaultWhen(std::shared_ptr<Expr> defaultWhen);
-    VertexBuilder &setDefaultWith(std::shared_ptr<Expr> defaultWith);
-    VertexBuilder &addBodyEdge(std::shared_ptr<Edge> edge);
+    class VertexBuilder
+    {
+    public:
+        VertexBuilder();
+        VertexBuilder &setType(std::weak_ptr<Type> type);
+        VertexBuilder &setId(std::string id);
+        VertexBuilder &setVisibility(Visibility visibility);
+        VertexBuilder &addNotificationParameter(NotificationParameter notificationParameter);
+        VertexBuilder &setStateExpr(std::shared_ptr<Expr> stateExpr);
+        VertexBuilder &addInterface(std::string interface);
+        VertexBuilder &setInitialValue(std::shared_ptr<Expr> initialValue);
+        VertexBuilder &enableAllOperations();
+        VertexBuilder &disableAllOperations();
+        VertexBuilder &toggleOperationEnabled(AllowedOperations op);
+        VertexBuilder &setDefaultWhen(std::shared_ptr<Expr> defaultWhen);
+        VertexBuilder &setDefaultWith(std::shared_ptr<Expr> defaultWith);
+        VertexBuilder &addBodyEdge(std::shared_ptr<Edge> edge);
 
-    std::shared_ptr<Vertex> build();
+        std::shared_ptr<Vertex> build();
 
-private:
-    std::weak_ptr<Type> type;
-    std::string id;
-    Visibility visibility;
-    std::vector<NotificationParameter> notificationParameters;
-    std::shared_ptr<Expr> stateExpr;
-    std::vector<std::string> interfaces;
-    std::shared_ptr<Expr> initialValue;
-    int allowedOperations;
-    std::shared_ptr<Expr> defaultWhen;
-    std::shared_ptr<Expr> defaultWith;
-    std::vector<std::shared_ptr<Edge>> bodyEdges;
-};
+    private:
+        std::weak_ptr<Type> type;
+        std::string id;
+        Visibility visibility;
+        std::vector<NotificationParameter> notificationParameters;
+        std::shared_ptr<Expr> stateExpr;
+        std::vector<std::string> interfaces;
+        std::shared_ptr<Expr> initialValue;
+        int allowedOperations;
+        std::shared_ptr<Expr> defaultWhen;
+        std::shared_ptr<Expr> defaultWith;
+        std::vector<std::shared_ptr<Edge>> bodyEdges;
+    };
+
+}

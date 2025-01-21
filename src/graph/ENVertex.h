@@ -11,9 +11,11 @@ namespace EN
 {
     enum AllowedOperations
     {
+        NONE = 0,
         READ = 1,
         WRITE = 2,
         NOTIFY = 4,
+        ALL = 7
     };
 
     class Vertex

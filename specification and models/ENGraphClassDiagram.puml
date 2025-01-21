@@ -109,18 +109,20 @@ package en {
 
     enum Visibility
     {
+      DEFAULT
       PRIVATE
       PUBLIC
-      DEFAULT
     }
 
     class Graph
 
     enum AllowedOperations
     {
+      NONE
       READ
       WRITE
       NOTIFY
+      ALL
     }
 
     class Vertex {
