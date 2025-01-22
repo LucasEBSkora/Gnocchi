@@ -1,9 +1,11 @@
 #pragma once
 
-#include "ENGraph.h"
+#include "ENGraphCommon.h"
 #include "ENType.h"
 #include "ENEdge.h"
 #include "NotificationParameter.h"
+
+#include <vector>
 #include <optional>
 #include <memory>
 

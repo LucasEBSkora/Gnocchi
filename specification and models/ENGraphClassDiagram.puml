@@ -114,7 +114,19 @@ package en {
       PUBLIC
     }
 
-    class Graph
+    class Graph extends Scope
+
+    class Scope {
+      + addVertex(v: Vertex)
+      + addEdge(e: Edge)
+      + getVertices() : Vertex
+      + hasVertex(name : string) : bool
+      + getVertex(id : string) : Vertex
+      + getEdges() : Edge
+    }
+
+    Scope "1" -->  "*" Vertex
+    Scope "1" -->  "*" Edge
 
     enum AllowedOperations
     {

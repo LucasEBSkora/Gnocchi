@@ -1,18 +1,8 @@
 #pragma once
 
-#include <vector>
-#include "ENTypes.h"
+#include "ENScope.h"
 
 namespace EN
 {
-    enum Visibility
-    {
-        DEFAULT = 0,
-        PRIVATE,
-        PUBLIC,
-    };
-
-    class Graph
-    {
-    };
+    using Graph = Scope;
 }

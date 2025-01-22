@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "VertexBuilder.h"
 #include "LiteralExpr.h"
+#include "ENTypes.h"
 
 namespace Gnocchi
 {
