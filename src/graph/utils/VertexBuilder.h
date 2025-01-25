@@ -7,9 +7,8 @@
 #include "NotificationParameter.h"
 #include <memory>
 
-namespace Gnocchi
+namespace EN
 {
-    using namespace EN;
     using namespace std;
 
     class VertexBuilder

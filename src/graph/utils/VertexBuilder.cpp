@@ -1,6 +1,6 @@
 #include "VertexBuilder.h"
 
-namespace Gnocchi
+namespace EN
 {
     VertexBuilder::VertexBuilder() : allowedOperations{AllowedOperations::ALL} {}
 

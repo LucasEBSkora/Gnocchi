@@ -24,7 +24,7 @@ namespace EN
 
         void testAddVertexUnnamed()
         {
-            Gnocchi::VertexBuilder builder;
+            VertexBuilder builder;
             shared_ptr<Vertex> v = builder.setVisibility(Visibility::PUBLIC).build();
             obj->addVertex(v);
             ASSERT_FALSE(obj->hasVertex(""));
@@ -34,7 +34,7 @@ namespace EN
 
         void testAddVertexNamed()
         {
-            Gnocchi::VertexBuilder builder;
+            VertexBuilder builder;
             shared_ptr<Vertex> v = builder.setId("vertex0").build();
             obj->addVertex(v);
             ASSERT_TRUE(obj->hasVertex("vertex0"));
@@ -51,7 +51,7 @@ namespace EN
 
         void testGetVertices()
         {
-            Gnocchi::VertexBuilder builder;
+            VertexBuilder builder;
 
             obj->addVertex(builder.setId("10").build());
             obj->addVertex(builder.setId("20").build());
@@ -61,7 +61,7 @@ namespace EN
         void testHasVertex()
         {
             ASSERT_FALSE(obj->hasVertex("10"));
-            Gnocchi::VertexBuilder builder;
+            VertexBuilder builder;
             obj->addVertex(builder.setId("10").build());
             ASSERT_TRUE(obj->hasVertex("10"));
             ASSERT_FALSE(obj->hasVertex("20"));
@@ -69,7 +69,7 @@ namespace EN
 
         void testGetVertexWorks()
         {
-            Gnocchi::VertexBuilder builder;
+            VertexBuilder builder;
             obj->addVertex(builder.setId("1").build());
             ASSERT_TRUE(obj->getVertex("1"));
         }

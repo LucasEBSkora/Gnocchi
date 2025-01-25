@@ -3,7 +3,7 @@
 #include "LiteralExpr.h"
 #include "ENTypes.h"
 
-namespace Gnocchi
+namespace EN
 {
 
   using namespace std;

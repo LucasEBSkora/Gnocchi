@@ -28,8 +28,8 @@ add_flex_bison_dependency(lexer parser)
 
 set(GNOCCHI_COMPILER_INCLUDES
     ${SOURCE_DIR}/front
-    ${SOURCE_DIR}/front/builder
     ${SOURCE_DIR}/graph
+    ${SOURCE_DIR}/graph/utils
     ${SOURCE_DIR}/graph/type
     ${SOURCE_DIR}/graph/expr
     ${SOURCE_DIR}
@@ -45,10 +45,10 @@ endif()
 
 file(GLOB GNOCCHI_COMPILER_SOURCES
     ${SOURCE_DIR}/front/*.cpp
-    ${SOURCE_DIR}/front/builder/*.cpp
     ${SOURCE_DIR}/graph/*.cpp
     ${SOURCE_DIR}/graph/type/*.cpp
     ${SOURCE_DIR}/graph/expr/*.cpp
+    ${SOURCE_DIR}/graph/utils/*.cpp
 )
 
 add_library(CompilerSources STATIC 
