@@ -7,44 +7,45 @@
 #include "NotificationParameter.h"
 #include <memory>
 
-using namespace EN;
-
 namespace Gnocchi
 {
+    using namespace EN;
+    using namespace std;
+
     class VertexBuilder
     {
     public:
         VertexBuilder();
-        VertexBuilder &setType(std::weak_ptr<Type> type);
-        VertexBuilder &setId(std::string id);
+        VertexBuilder &setType(weak_ptr<Type> type);
+        VertexBuilder &setId(string id);
         VertexBuilder &setVisibility(Visibility visibility);
         VertexBuilder &addNotificationParameter(NotificationParameter notificationParameter);
-        VertexBuilder &setStateExpr(std::shared_ptr<Expr> stateExpr);
+        VertexBuilder &setStateExpr(shared_ptr<Expr> stateExpr);
         VertexBuilder &setBoundState(bool boundState);
-        VertexBuilder &addInterface(std::string interface);
-        VertexBuilder &setInitialValue(std::shared_ptr<Expr> initialValue);
+        VertexBuilder &addInterface(string interface);
+        VertexBuilder &setInitialValue(shared_ptr<Expr> initialValue);
         VertexBuilder &enableAllOperations();
         VertexBuilder &disableAllOperations();
         VertexBuilder &toggleOperationEnabled(AllowedOperations op);
-        VertexBuilder &setDefaultWhen(std::shared_ptr<Expr> defaultWhen);
-        VertexBuilder &setDefaultWith(std::shared_ptr<Expr> defaultWith);
-        VertexBuilder &addBodyEdge(std::shared_ptr<Edge> edge);
+        VertexBuilder &setDefaultWhen(shared_ptr<Expr> defaultWhen);
+        VertexBuilder &setDefaultWith(shared_ptr<Expr> defaultWith);
+        VertexBuilder &addBodyEdge(shared_ptr<Edge> edge);
 
-        std::shared_ptr<Vertex> build();
+        shared_ptr<Vertex> build();
 
     private:
-        std::weak_ptr<Type> type;
-        std::string id;
+        weak_ptr<Type> type;
+        string id;
         Visibility visibility;
-        std::vector<NotificationParameter> notificationParameters;
-        std::shared_ptr<Expr> stateExpr;
+        vector<NotificationParameter> notificationParameters;
+        shared_ptr<Expr> stateExpr;
         bool boundState;
-        std::vector<std::string> interfaces;
-        std::shared_ptr<Expr> initialValue;
+        vector<string> interfaces;
+        shared_ptr<Expr> initialValue;
         int allowedOperations;
-        std::shared_ptr<Expr> defaultWhen;
-        std::shared_ptr<Expr> defaultWith;
-        std::vector<std::shared_ptr<Edge>> bodyEdges;
+        shared_ptr<Expr> defaultWhen;
+        shared_ptr<Expr> defaultWith;
+        vector<shared_ptr<Edge>> bodyEdges;
     };
 
 }

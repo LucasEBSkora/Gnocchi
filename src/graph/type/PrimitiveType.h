@@ -8,6 +8,7 @@
 
 namespace EN
 {
+    using namespace std;
 
     class PrimitiveType : public Type
     {
@@ -31,7 +32,7 @@ namespace EN
             CHAR,
         };
 
-        static const std::weak_ptr<PrimitiveType> getPrimitiveType(Primitive value);
+        static const weak_ptr<PrimitiveType> getPrimitiveType(Primitive value);
         virtual void accept(TypeVisitor &visit) const override;
         virtual ~PrimitiveType();
         const Primitive value;
@@ -39,7 +40,7 @@ namespace EN
         PrimitiveType(Primitive value);
 
     private:
-        static std::map<Primitive, std::shared_ptr<PrimitiveType>> flyweightMap;
+        static map<Primitive, shared_ptr<PrimitiveType>> flyweightMap;
     };
 
 }

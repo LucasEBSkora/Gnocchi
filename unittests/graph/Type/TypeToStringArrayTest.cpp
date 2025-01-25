@@ -4,17 +4,17 @@
 
 #include <iostream>
 
-using TestParam = std::tuple<EN::PrimitiveType::Primitive, const char *, const char *>;
-
 namespace EN
 {
+  using namespace std;
+  using TestParam = tuple<EN::PrimitiveType::Primitive, const char *, const char *>;
 
   class TypeToStringPrimitiveTest : public testing::Test, public testing::WithParamInterface<TestParam>
   {
   public:
     void testTypeToStringPrimitive(EN::PrimitiveType::Primitive type, const char *expected)
     {
-      const std::weak_ptr<Type> typeInst = PrimitiveType::getPrimitiveType(type);
+      const weak_ptr<Type> typeInst = PrimitiveType::getPrimitiveType(type);
       ASSERT_EQ(expected, typeInst.lock()->toString());
     }
   };
@@ -25,7 +25,7 @@ namespace EN
     this->testTypeToStringPrimitive(std::get<0>(p), std::get<1>(p));
   }
 
-  const std::vector<TestParam> testTuples{
+  const vector<TestParam> testTuples{
       {PrimitiveType::INT8, "int8", "testINT8ToString"},
       {PrimitiveType::INT16, "int16", "testINT16ToString"},
       {PrimitiveType::INT24, "int24", "testINT24ToString"},

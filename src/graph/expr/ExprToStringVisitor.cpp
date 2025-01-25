@@ -5,7 +5,7 @@ namespace EN
 {
     ExprToStringVisitor::~ExprToStringVisitor() {}
 
-    const std::string ExprToStringVisitor::getResult()
+    const string ExprToStringVisitor::getResult()
     {
         return ss.str();
     }

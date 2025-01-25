@@ -4,13 +4,13 @@ namespace Gnocchi
 {
     VertexBuilder::VertexBuilder() : allowedOperations{AllowedOperations::ALL} {}
 
-    VertexBuilder &VertexBuilder::setType(std::weak_ptr<Type> type)
+    VertexBuilder &VertexBuilder::setType(weak_ptr<Type> type)
     {
         this->type = type;
         return *this;
     }
 
-    VertexBuilder &VertexBuilder::setId(std::string id)
+    VertexBuilder &VertexBuilder::setId(string id)
     {
         this->id = id;
         return *this;
@@ -28,9 +28,9 @@ namespace Gnocchi
         return *this;
     }
 
-    VertexBuilder &VertexBuilder::setStateExpr(std::shared_ptr<Expr> stateExpr)
+    VertexBuilder &VertexBuilder::setStateExpr(shared_ptr<Expr> stateExpr)
     {
-        this->stateExpr = std::move(stateExpr);
+        this->stateExpr = move(stateExpr);
         return *this;
     }
 
@@ -40,15 +40,15 @@ namespace Gnocchi
         return *this;
     }
 
-    VertexBuilder &VertexBuilder::addInterface(std::string interface)
+    VertexBuilder &VertexBuilder::addInterface(string interface)
     {
         this->interfaces.push_back(interface);
         return *this;
     }
 
-    VertexBuilder &VertexBuilder::setInitialValue(std::shared_ptr<Expr> initialValue)
+    VertexBuilder &VertexBuilder::setInitialValue(shared_ptr<Expr> initialValue)
     {
-        this->initialValue = std::move(initialValue);
+        this->initialValue = move(initialValue);
         return *this;
     }
 
@@ -70,26 +70,26 @@ namespace Gnocchi
         return *this;
     }
 
-    VertexBuilder &VertexBuilder::setDefaultWhen(std::shared_ptr<Expr> defaultWhen)
+    VertexBuilder &VertexBuilder::setDefaultWhen(shared_ptr<Expr> defaultWhen)
     {
-        this->defaultWhen = std::move(defaultWhen);
+        this->defaultWhen = move(defaultWhen);
         return *this;
     }
 
-    VertexBuilder &VertexBuilder::setDefaultWith(std::shared_ptr<Expr> defaultWith)
+    VertexBuilder &VertexBuilder::setDefaultWith(shared_ptr<Expr> defaultWith)
     {
-        this->defaultWith = std::move(defaultWith);
+        this->defaultWith = move(defaultWith);
         return *this;
     }
 
-    VertexBuilder &VertexBuilder::addBodyEdge(std::shared_ptr<Edge> edge)
+    VertexBuilder &VertexBuilder::addBodyEdge(shared_ptr<Edge> edge)
     {
         bodyEdges.push_back(edge);
         return *this;
     }
 
-    std::shared_ptr<Vertex> VertexBuilder::build()
+    shared_ptr<Vertex> VertexBuilder::build()
     {
-        return std::make_shared<Vertex>(type, id, visibility, notificationParameters, stateExpr, boundState, interfaces, initialValue, allowedOperations, defaultWhen, defaultWith, bodyEdges);
+        return make_shared<Vertex>(type, id, visibility, notificationParameters, stateExpr, boundState, interfaces, initialValue, allowedOperations, defaultWhen, defaultWith, bodyEdges);
     }
 }

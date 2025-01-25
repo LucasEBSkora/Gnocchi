@@ -9,8 +9,8 @@ statement ->  <block>
 <block> -> "atom"? "{" <statement>+ "}" ";"
 
 <definition> -> <definition_header> <vertex_definition> ";"
-              | <definition_header> <holon_definition> ";"
-			  | <definition_header> <interface_definition> ";"
+                | <definition_header> <holon_definition> ";"
+                | <definition_header> <interface_definition> ";"
 
 definition_header -> <visibility>? ((id | "this" | "head") <definition_ op>)?
 visibility -> "public" | "private"

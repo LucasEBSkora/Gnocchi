@@ -3,10 +3,11 @@
 #include <iostream>
 #include <utility>
 
-using charLiteralTestParam = std::tuple<const char *, char, const char *>;
-
 namespace Gnocchi
 {
+  using namespace std;
+
+  using charLiteralTestParam = tuple<const char *, char, const char *>;
 
   class charLiteralsEscapeCharacterScannerTest : public testing::Test, public testing::WithParamInterface<charLiteralTestParam>
   {
@@ -27,7 +28,7 @@ namespace Gnocchi
 
     void testIdentifyCharLiteral(const char *text, char expected)
     {
-      std::stringstream stream;
+      stringstream stream;
       stream << '\'' << text << '\'';
       obj->switch_streams(&stream, nullptr);
       Parser::symbol_type token = obj->get_next_token();
@@ -39,10 +40,10 @@ namespace Gnocchi
   TEST_P(charLiteralsEscapeCharacterScannerTest, testIdentifyCharLiteral)
   {
     charLiteralTestParam p = GetParam();
-    this->testIdentifyCharLiteral(std::get<0>(p), std::get<1>(p));
+    this->testIdentifyCharLiteral(get<0>(p), get<1>(p));
   }
 
-  const std::vector<charLiteralTestParam> simpleTokenPairs{
+  const vector<charLiteralTestParam> simpleTokenPairs{
       {"\\'", '\'', "testIdentifyApostrophe"},
       {"\\\"", '\"', "testIdentifyQuotationEscape"},
       {"\\\\", '\\', "testIdentifyBackslash"},
@@ -58,6 +59,6 @@ namespace Gnocchi
 
   INSTANTIATE_TEST_SUITE_P(testIdentifyCharConstants, charLiteralsEscapeCharacterScannerTest,
                            testing::ValuesIn(simpleTokenPairs), [](const testing::TestParamInfo<charLiteralTestParam> &info)
-                           { return std::get<2>(info.param); });
+                           { return get<2>(info.param); });
 
 }

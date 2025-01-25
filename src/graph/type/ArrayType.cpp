@@ -10,7 +10,7 @@ namespace EN
     };
 
     ArrayType::~ArrayType() {}
-    ArrayType::ArrayType(const std::weak_ptr<Type> baseType, std::vector<std::shared_ptr<Expr>> dimensions)
+    ArrayType::ArrayType(const weak_ptr<Type> baseType, vector<shared_ptr<Expr>> dimensions)
         : baseType{baseType}, dimensions{dimensions}
     {
     }

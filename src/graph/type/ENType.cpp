@@ -10,7 +10,7 @@ namespace EN
     {
     }
 
-    std::string Type::toString() const
+    string Type::toString() const
     {
         TypeToStringVisitor visitor;
         this->accept(visitor);

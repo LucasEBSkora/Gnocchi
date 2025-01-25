@@ -6,7 +6,7 @@
 namespace EN
 {
 
-    using LiteralVariant = std::variant<long long, float, double, char, std::string, bool>;
+    using LiteralVariant = variant<long long, float, double, char, string, bool>;
 
     class LiteralExpr : public Expr
     {
@@ -28,7 +28,7 @@ namespace EN
         float getFloat() const;
         double getDouble() const;
         char getChar() const;
-        std::string getString() const;
+        string getString() const;
         bool getBool() const;
         const LiteralVariant &get() const;
         virtual void accept(ExprVisitor &visit) const override;

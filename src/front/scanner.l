@@ -401,41 +401,41 @@ as {
 }
 
 {signed_integer_literal} {
-	long long integer = std::atoll(yytext);
+	long long integer = atoll(yytext);
 	return Gnocchi::Parser::make_SIGNED_INTEGER_LITERAL(integer, getLoc());
 }
 
 {unsigned_integer_literal} {
-	unsigned long long integer = std::strtoull(yytext, nullptr, 10);
+	unsigned long long integer = strtoull(yytext, nullptr, 10);
 	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, getLoc());
 }
 
 {unsigned_integer_binary_literal} {
-	unsigned long long integer = std::strtoull(yytext + 2, nullptr, 2);
+	unsigned long long integer = strtoull(yytext + 2, nullptr, 2);
 	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, getLoc());
 }
 
 {unsigned_integer_octal_literal} {
-	unsigned long long integer = std::strtoull(yytext + 2, nullptr, 8);
+	unsigned long long integer = strtoull(yytext + 2, nullptr, 8);
 	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, getLoc());
 }
 
 {unsigned_integer_hex_literal} {
-	unsigned long long integer = std::strtoull(yytext + 2, nullptr, 16);
+	unsigned long long integer = strtoull(yytext + 2, nullptr, 16);
 	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, getLoc());
 }
 
 {unsigned_integer_literal_exponent} {
 	char* exp;
-	unsigned long long integer = std::strtoull(yytext, &exp, 10);
-	integer *= pow(10, std::strtoull(exp+1, nullptr, 10));
+	unsigned long long integer = strtoull(yytext, &exp, 10);
+	integer *= pow(10, strtoull(exp+1, nullptr, 10));
 	return Gnocchi::Parser::make_UNSIGNED_INTEGER_LITERAL(integer, getLoc());
 }
 
 {signed_integer_literal_exponent} {
 	char* exp;
-	long long integer = std::strtoll(yytext, &exp, 10);
-	integer *= pow(10, std::strtoll(exp+1, nullptr, 10));
+	long long integer = strtoll(yytext, &exp, 10);
+	integer *= pow(10, strtoll(exp+1, nullptr, 10));
 	return Gnocchi::Parser::make_SIGNED_INTEGER_LITERAL(integer, getLoc());
 }
 
@@ -498,26 +498,26 @@ as {
 }
 
 {double_literal} {
-	double value = std::stod(yytext);
+	double value = stod(yytext);
 	return Gnocchi::Parser::make_DOUBLE_LITERAL(value, getLoc());
 }
 
 {exponent_double_literal} {
 	char* exp;
-	double value = std::strtod(yytext, &exp);
-	value *= pow(10, std::strtod(exp+1, nullptr));
+	double value = strtod(yytext, &exp);
+	value *= pow(10, strtod(exp+1, nullptr));
 	return Gnocchi::Parser::make_DOUBLE_LITERAL(value, getLoc());
 }
 
 {float_literal} {
-	float value = std::atof(yytext);
+	float value = atof(yytext);
 	return Gnocchi::Parser::make_FLOAT_LITERAL(value, getLoc());
 }
 
 {exponent_float_literal} {
 	char* exp;
-	float value = std::strtof(yytext, &exp);
-	value *= pow(10, std::strtof(exp+1, nullptr));
+	float value = strtof(yytext, &exp);
+	value *= pow(10, strtof(exp+1, nullptr));
 	return Gnocchi::Parser::make_FLOAT_LITERAL(value, getLoc());
 }
 

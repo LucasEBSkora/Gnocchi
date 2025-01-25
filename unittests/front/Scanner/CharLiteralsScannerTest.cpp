@@ -5,6 +5,7 @@
 
 namespace Gnocchi
 {
+  using namespace std;
 
   class CharLiteralsScannerTest : public testing::Test, public testing::WithParamInterface<char>
   {
@@ -25,7 +26,7 @@ namespace Gnocchi
 
     void testIdentifyCharLiteral(char c)
     {
-      std::stringstream stream;
+      stringstream stream;
       stream << '\'' << c << '\'';
       obj->switch_streams(&stream, nullptr);
       Parser::symbol_type token = obj->get_next_token();

@@ -11,6 +11,7 @@
 
 namespace EN
 {
+    using namespace std;
     enum AllowedOperations
     {
         NONE = 0,
@@ -24,36 +25,36 @@ namespace EN
     {
     public:
         Vertex(
-            const std::weak_ptr<Type> type,
-            const std::string id,
+            const weak_ptr<Type> type,
+            const string id,
             const Visibility visibility,
-            const std::vector<NotificationParameter> notificationParameters,
-            const std::shared_ptr<Expr> stateExpr,
+            const vector<NotificationParameter> notificationParameters,
+            const shared_ptr<Expr> stateExpr,
             bool boundState,
-            const std::vector<std::string> interfaces,
-            const std::shared_ptr<Expr> initialValue,
+            const vector<string> interfaces,
+            const shared_ptr<Expr> initialValue,
             const int allowedOperations,
-            const std::shared_ptr<Expr> defaultWhen,
-            const std::shared_ptr<Expr> defaultWith,
-            const std::vector<std::shared_ptr<Edge>> bodyEdges);
+            const shared_ptr<Expr> defaultWhen,
+            const shared_ptr<Expr> defaultWith,
+            const vector<shared_ptr<Edge>> bodyEdges);
 
         ~Vertex();
 
-        const std::weak_ptr<Type> type;
-        const std::string id;
+        const weak_ptr<Type> type;
+        const string id;
         const Visibility visibility;
-        const std::vector<NotificationParameter> notificationParameters;
-        const std::shared_ptr<Expr> stateExpr;
+        const vector<NotificationParameter> notificationParameters;
+        const shared_ptr<Expr> stateExpr;
         bool boundState;
-        const std::vector<std::string> interfaces;
-        const std::shared_ptr<Expr> initialValue;
+        const vector<string> interfaces;
+        const shared_ptr<Expr> initialValue;
         const int allowedOperations;
-        const std::shared_ptr<Expr> defaultWhen;
-        const std::shared_ptr<Expr> defaultWith;
+        const shared_ptr<Expr> defaultWhen;
+        const shared_ptr<Expr> defaultWith;
 
-        const std::vector<std::shared_ptr<Edge>> getEdges() const;
+        const vector<shared_ptr<Edge>> getEdges() const;
 
     private:
-        const std::vector<std::shared_ptr<Edge>> bodyEdges;
+        const vector<shared_ptr<Edge>> bodyEdges;
     };
 }

@@ -8,7 +8,7 @@ namespace EN
 
     TypeToStringVisitor::~TypeToStringVisitor() {}
 
-    const std::string TypeToStringVisitor::getResult()
+    const string TypeToStringVisitor::getResult()
     {
         return ss.str();
     }
@@ -72,7 +72,7 @@ namespace EN
     void TypeToStringVisitor::visit(const ArrayType &type)
     {
         type.baseType.lock()->accept(*this);
-        for (std::shared_ptr<Expr> dimension : type.dimensions)
+        for (shared_ptr<Expr> dimension : type.dimensions)
         {
             ss << '[' << dimension->toString() << ']';
         }

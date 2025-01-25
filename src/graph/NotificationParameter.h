@@ -9,14 +9,14 @@
 
 namespace EN
 {
-
+    using namespace std;
     class NotificationParameter
     {
     public:
-        const std::string name;
-        const std::weak_ptr<Type> type;
-        const std::optional<std::weak_ptr<Expr>> defaultValue;
-        NotificationParameter(const std::string name, std::weak_ptr<Type> type, std::weak_ptr<Expr> defaultValue);
-        NotificationParameter(const std::string name, std::weak_ptr<Type> type);
+        const string name;
+        const weak_ptr<Type> type;
+        const optional<weak_ptr<Expr>> defaultValue;
+        NotificationParameter(const string name, weak_ptr<Type> type, weak_ptr<Expr> defaultValue);
+        NotificationParameter(const string name, weak_ptr<Type> type);
     };
 }

@@ -5,6 +5,7 @@
 
 namespace EN
 {
+    using namespace std;
 
     class ScopeTest : public testing::Test
     {
@@ -24,7 +25,7 @@ namespace EN
         void testAddVertexUnnamed()
         {
             Gnocchi::VertexBuilder builder;
-            std::shared_ptr<Vertex> v = builder.setVisibility(Visibility::PUBLIC).build();
+            shared_ptr<Vertex> v = builder.setVisibility(Visibility::PUBLIC).build();
             obj->addVertex(v);
             ASSERT_FALSE(obj->hasVertex(""));
             ASSERT_EQ(1, obj->getVertices().size());
@@ -34,7 +35,7 @@ namespace EN
         void testAddVertexNamed()
         {
             Gnocchi::VertexBuilder builder;
-            std::shared_ptr<Vertex> v = builder.setId("vertex0").build();
+            shared_ptr<Vertex> v = builder.setId("vertex0").build();
             obj->addVertex(v);
             ASSERT_TRUE(obj->hasVertex("vertex0"));
             ASSERT_EQ(1, obj->getVertices().size());
@@ -44,7 +45,7 @@ namespace EN
 
         void testAddEdge()
         {
-            obj->addEdge(std::make_shared<Edge>(std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>()));
+            obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>()));
             ASSERT_EQ(1, obj->getEdges().size());
         }
 
@@ -80,9 +81,9 @@ namespace EN
 
         void testGetEdges()
         {
-            obj->addEdge(std::make_shared<Edge>(std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>()));
-            obj->addEdge(std::make_shared<Edge>(std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>()));
-            obj->addEdge(std::make_shared<Edge>(std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>()));
+            obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>()));
+            obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>()));
+            obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>()));
             ASSERT_EQ(3, obj->getEdges().size());
         }
     };

@@ -6,14 +6,15 @@
 
 namespace EN
 {
+    using namespace std;
     class ExprToStringVisitor : public ExprVisitor
     {
     public:
         virtual ~ExprToStringVisitor();
-        virtual const std::string getResult();
+        virtual const string getResult();
         virtual void visit(const LiteralExpr &expr);
 
     private:
-        std::stringstream ss;
+        stringstream ss;
     };
 }

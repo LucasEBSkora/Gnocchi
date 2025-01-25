@@ -9,15 +9,17 @@
 
 namespace EN
 {
+    using namespace std;
+
     class ArrayType : public Type
     {
     public:
         virtual void accept(TypeVisitor &visit) const override;
         virtual ~ArrayType();
-        ArrayType(const std::weak_ptr<Type> baseType, std::vector<std::shared_ptr<Expr>> dimensions);
+        ArrayType(const weak_ptr<Type> baseType, vector<shared_ptr<Expr>> dimensions);
 
-        const std::weak_ptr<Type> &baseType;
-        const std::vector<std::shared_ptr<Expr>> dimensions;
+        const weak_ptr<Type> &baseType;
+        const vector<shared_ptr<Expr>> dimensions;
     };
 
 }

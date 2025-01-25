@@ -5,11 +5,12 @@
 
 namespace Gnocchi
 {
+  using namespace std;
 
   class LocationProviderTest : public testing::Test
   {
   protected:
-    const std::string defaultFilename{"mock.gno"};
+    const string defaultFilename{"mock.gno"};
     LocationProvider provider{defaultFilename};
 
     virtual void SetUp() override
@@ -25,7 +26,7 @@ namespace Gnocchi
     void testFilename()
     {
       ASSERT_EQ("mock.gno", *provider.getFileName());
-      std::string otherName{"f2.gno"};
+      string otherName{"f2.gno"};
       provider.setFileName(otherName);
       ASSERT_EQ("f2.gno", *provider.getFileName());
     }

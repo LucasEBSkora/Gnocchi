@@ -27,9 +27,9 @@ namespace EN
     {
         return std::get<char>(value);
     }
-    std::string LiteralExpr::getString() const
+    string LiteralExpr::getString() const
     {
-        return std::get<std::string>(value);
+        return std::get<string>(value);
     }
     bool LiteralExpr::getBool() const
     {

@@ -6,6 +6,8 @@
 namespace Gnocchi
 {
 
+  using namespace std;
+
   class VertexBuilderTest : public testing::Test
   {
   public:
@@ -23,7 +25,7 @@ namespace Gnocchi
 
     void testBuildEmpty()
     {
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_TRUE(v->type.expired());
       ASSERT_EQ("", v->id);
       ASSERT_EQ(Visibility::DEFAULT, v->visibility);
@@ -40,9 +42,9 @@ namespace Gnocchi
 
     void testSetType()
     {
-      std::weak_ptr<Type> t = PrimitiveType::getPrimitiveType(PrimitiveType::BOOL);
+      weak_ptr<Type> t = PrimitiveType::getPrimitiveType(PrimitiveType::BOOL);
       obj->setType(t);
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_FALSE(v->type.expired());
       ASSERT_EQ("bool", v->type.lock()->toString());
     }
@@ -50,30 +52,30 @@ namespace Gnocchi
     void testSetId()
     {
       obj->setId("10");
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_EQ("10", v->id);
     }
 
     void testSetVisibility()
     {
       obj->setVisibility(Visibility::PRIVATE);
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_EQ(Visibility::PRIVATE, v->visibility);
     }
 
     void testAddNotificationparameter()
     {
       obj->addNotificationParameter({"first", PrimitiveType::getPrimitiveType(PrimitiveType::INT8)});
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_EQ(1, v->notificationParameters.size());
       ASSERT_EQ("first", v->notificationParameters[0].name);
     }
 
     void testSetStateExpr()
     {
-      std::shared_ptr<Expr> expr = std::make_shared<LiteralExpr>(20);
+      shared_ptr<Expr> expr = make_shared<LiteralExpr>(20);
       obj->setStateExpr(expr);
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_TRUE(v->stateExpr);
       ASSERT_EQ("20", v->stateExpr->toString());
     }
@@ -81,23 +83,23 @@ namespace Gnocchi
     void testsetBoundState()
     {
       obj->setBoundState(true);
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_TRUE(v->boundState);
     }
 
     void testAddInterface()
     {
       obj->addInterface("Rule");
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_EQ(1, v->interfaces.size());
       ASSERT_EQ("Rule", v->interfaces[0]);
     }
 
     void testSetInitialValue()
     {
-      std::shared_ptr<Expr> expr = std::make_shared<LiteralExpr>("potato");
+      shared_ptr<Expr> expr = make_shared<LiteralExpr>("potato");
       obj->setInitialValue(expr);
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_TRUE(v->initialValue);
       ASSERT_EQ("potato", v->initialValue->toString());
     }
@@ -105,14 +107,14 @@ namespace Gnocchi
     void testDisableAllOperations()
     {
       obj->disableAllOperations();
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_EQ(AllowedOperations::NONE, v->allowedOperations);
     }
 
     void testEnableAllOperations()
     {
       obj->enableAllOperations();
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_EQ(AllowedOperations::ALL, v->allowedOperations);
     }
 
@@ -127,26 +129,26 @@ namespace Gnocchi
 
     void testSetDefaultWhen()
     {
-      std::shared_ptr<Expr> expr = std::make_shared<LiteralExpr>(true);
+      shared_ptr<Expr> expr = make_shared<LiteralExpr>(true);
       obj->setDefaultWhen(expr);
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_TRUE(v->defaultWhen);
       ASSERT_EQ("true", v->defaultWhen->toString());
     }
 
     void testSetDefaultWith()
     {
-      std::shared_ptr<Expr> expr = std::make_shared<LiteralExpr>(20.5);
+      shared_ptr<Expr> expr = make_shared<LiteralExpr>(20.5);
       obj->setDefaultWith(expr);
-      std::shared_ptr<Vertex> v = obj->build();
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_TRUE(v->defaultWith);
       ASSERT_EQ("20.5", v->defaultWith->toString());
     }
 
     void testAddBodyEdge()
     {
-      obj->addBodyEdge(std::make_shared<Edge>(std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::shared_ptr<Expr>(), std::make_shared<LiteralExpr>(10)));
-      std::shared_ptr<Vertex> v = obj->build();
+      obj->addBodyEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), make_shared<LiteralExpr>(10)));
+      shared_ptr<Vertex> v = obj->build();
       ASSERT_EQ(1, v->getEdges().size());
       ASSERT_EQ("10", v->getEdges()[0]->with->toString());
     }

@@ -4,12 +4,14 @@
 
 namespace EN
 {
+    using namespace std;
+
     class ExprVisitor;
 
     class Expr
     {
     public:
-        std::string toString() const;
+        string toString() const;
         virtual void accept(ExprVisitor &visit) const = 0;
         virtual ~Expr();
     };

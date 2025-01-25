@@ -10,7 +10,7 @@ namespace EN
     {
     }
 
-    std::string Expr::toString() const
+    string Expr::toString() const
     {
         ExprToStringVisitor visitor;
         this->accept(visitor);

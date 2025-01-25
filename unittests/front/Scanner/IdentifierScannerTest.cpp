@@ -2,45 +2,54 @@
 #include "scanner.h"
 #include <iostream>
 
-namespace Gnocchi {
+namespace Gnocchi
+{
 
-  class IdentifierScannerTest : public testing::Test {
+  class IdentifierScannerTest : public testing::Test
+  {
   public:
     Scanner *obj;
     LocationProvider provider{"mock.gno"};
 
-    virtual void SetUp() override {
+    virtual void SetUp() override
+    {
       obj = new Scanner(provider);
     }
 
-    virtual void TearDown() override {
+    virtual void TearDown() override
+    {
       provider.reset();
       delete obj;
     }
 
-    void testIdentifyIdentifier(const char *text) {
-      std::stringstream stream;
+    void testIdentifyIdentifier(const char *text)
+    {
+      stringstream stream;
       stream << text;
       obj->switch_streams(&stream, nullptr);
       Parser::symbol_type token = obj->get_next_token();
       ASSERT_EQ(Parser::symbol_kind_type::S_IDENTIFIER, token.kind());
-      ASSERT_EQ(text, token.value.as<std::string>());
+      ASSERT_EQ(text, token.value.as<string>());
     }
   };
 
-  TEST_F(IdentifierScannerTest, testIdentifierOnlyText) {
+  TEST_F(IdentifierScannerTest, testIdentifierOnlyText)
+  {
     this->testIdentifyIdentifier("abaosafpasfas");
   }
 
-  TEST_F(IdentifierScannerTest, testIdentifierStartUnderscore) {
+  TEST_F(IdentifierScannerTest, testIdentifierStartUnderscore)
+  {
     this->testIdentifyIdentifier("_padkadada");
   }
 
-  TEST_F(IdentifierScannerTest, testIdentifierWithNumbers) {
+  TEST_F(IdentifierScannerTest, testIdentifierWithNumbers)
+  {
     this->testIdentifyIdentifier("_12312412412");
   }
 
-  TEST_F(IdentifierScannerTest, testIdentifierComplete) {
+  TEST_F(IdentifierScannerTest, testIdentifierComplete)
+  {
     this->testIdentifyIdentifier("_1jiasjfaafsokw243___");
   }
 }

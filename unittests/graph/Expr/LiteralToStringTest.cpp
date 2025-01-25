@@ -2,16 +2,18 @@
 
 #include "ENExprs.h"
 
-using TestParam = std::tuple<EN::LiteralVariant, const char *, const char *>;
-
 namespace EN
 {
+    using namespace std;
+
+    using TestParam = tuple<EN::LiteralVariant, const char *, const char *>;
+
     class LiteralToStringTest : public testing::Test, public testing::WithParamInterface<TestParam>
     {
     public:
         void testLiteralToString(LiteralVariant var, const char *expected)
         {
-            const std::unique_ptr<Expr> expr = std::make_unique<LiteralExpr>(var);
+            const unique_ptr<Expr> expr = make_unique<LiteralExpr>(var);
 
             ASSERT_EQ(expected, expr->toString());
         }
@@ -23,7 +25,7 @@ namespace EN
         this->testLiteralToString(std::get<0>(p), std::get<1>(p));
     }
 
-    const std::vector<TestParam> testTuples{
+    const vector<TestParam> testTuples{
         {10ll, "10", "testIntToString"},
         {23.f, "23f", "testFloatToString"},
         {0.12, "0.12", "testDoubleToString"},

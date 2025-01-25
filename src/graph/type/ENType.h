@@ -5,12 +5,14 @@
 
 namespace EN
 {
+    using namespace std;
+
     class TypeVisitor;
 
     class Type
     {
     public:
-        std::string toString() const;
+        string toString() const;
         virtual void accept(TypeVisitor &visit) const = 0;
         virtual ~Type();
     };

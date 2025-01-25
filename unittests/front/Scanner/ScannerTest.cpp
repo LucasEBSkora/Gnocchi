@@ -29,7 +29,7 @@ namespace Gnocchi
 
     void testSwitchStream()
     {
-      std::stringstream stream;
+      stringstream stream;
       stream << "";
       obj->switch_streams(&stream, nullptr);
       ASSERT_EQ(0, obj->get_next_token().kind());
@@ -37,7 +37,7 @@ namespace Gnocchi
       stream << "+ *";
       ASSERT_EQ(Parser::symbol_kind_type::S_PLUS, obj->get_next_token().kind());
 
-      std::stringstream stream2;
+      stringstream stream2;
       stream2 << "";
       obj->switch_streams(&stream2, nullptr);
       ASSERT_EQ(0, obj->get_next_token().kind());

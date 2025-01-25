@@ -4,6 +4,7 @@
 
 namespace Gnocchi
 {
+  using namespace std;
 
   class ScannerTest : public testing::Test
   {
@@ -25,7 +26,7 @@ namespace Gnocchi
     template <typename T>
     void testIdentifyLiteral(const char *text, Parser::symbol_kind_type type, T value)
     {
-      std::stringstream stream;
+      stringstream stream;
       stream << text;
       obj->switch_streams(&stream, nullptr);
       Parser::symbol_type token = obj->get_next_token();

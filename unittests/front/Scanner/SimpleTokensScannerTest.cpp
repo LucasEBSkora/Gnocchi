@@ -3,10 +3,11 @@
 #include <iostream>
 #include <utility>
 
-using SimpleTokenParam = std::tuple<Gnocchi::Parser::symbol_kind_type, const char *, const char *>;
-
 namespace Gnocchi
 {
+
+  using namespace std;
+  using SimpleTokenParam = tuple<Gnocchi::Parser::symbol_kind_type, const char *, const char *>;
 
   class SimpleTokensScannerTest : public testing::Test, public testing::WithParamInterface<SimpleTokenParam>
   {
@@ -27,7 +28,7 @@ namespace Gnocchi
 
     void testIdentifySimpleTokenType(Parser::symbol_kind_type type, const char *token)
     {
-      std::stringstream stream;
+      stringstream stream;
       stream << token;
       obj->switch_streams(&stream, nullptr);
       ASSERT_EQ(type, obj->get_next_token().kind());
@@ -37,10 +38,10 @@ namespace Gnocchi
   TEST_P(SimpleTokensScannerTest, testIdentifySimpleTokenType)
   {
     SimpleTokenParam p = GetParam();
-    this->testIdentifySimpleTokenType(std::get<0>(p), std::get<1>(p));
+    this->testIdentifySimpleTokenType(get<0>(p), get<1>(p));
   }
 
-  const std::vector<SimpleTokenParam> simpleTokenPairs{
+  const vector<SimpleTokenParam> simpleTokenPairs{
       {Parser::symbol_kind_type::S_EDGE, "edge", "testIdentifyEdge"},
       {Parser::symbol_kind_type::S_ATOM, "atom", "testIdentifyAtom"},
       {Parser::symbol_kind_type::S_THIS, "this", "testIdentifyThis"},
@@ -130,5 +131,5 @@ namespace Gnocchi
 
   INSTANTIATE_TEST_SUITE_P(testIdentifyPunctiationOperatorsKeywords, SimpleTokensScannerTest,
                            testing::ValuesIn(simpleTokenPairs), [](const testing::TestParamInfo<SimpleTokenParam> &info)
-                           { return std::get<2>(info.param); });
+                           { return get<2>(info.param); });
 }

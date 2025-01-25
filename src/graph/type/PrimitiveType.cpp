@@ -6,13 +6,14 @@
 
 namespace EN
 {
+    using namespace std;
 
-    std::map<PrimitiveType::Primitive, std::shared_ptr<PrimitiveType>> PrimitiveType::flyweightMap;
+    map<PrimitiveType::Primitive, shared_ptr<PrimitiveType>> PrimitiveType::flyweightMap;
 
-    const std::weak_ptr<PrimitiveType> PrimitiveType::getPrimitiveType(Primitive value)
+    const weak_ptr<PrimitiveType> PrimitiveType::getPrimitiveType(Primitive value)
     {
         if (flyweightMap.find(value) == flyweightMap.end())
-            flyweightMap.emplace(value, std::make_shared<PrimitiveType>(value));
+            flyweightMap.emplace(value, make_shared<PrimitiveType>(value));
 
         return flyweightMap.at(value);
     }

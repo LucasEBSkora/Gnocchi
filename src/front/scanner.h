@@ -1,8 +1,8 @@
 /*
  * The MIT License (MIT)
- * 
+ *
  * Copyright (c) 2014 Krzysztof Narkiewicz <krzysztof.narkiewicz@ezaquarii.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -11,10 +11,10 @@
  * copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following
  * conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,17 +23,16 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
- * 
+ *
  */
 
 #ifndef SCANNER_H
 #define SCANNER_H
 
-
 /**
  * Generated Flex class name is yyFlexLexer by default. If we want to use more flex-generated
  * classes we should name them differently. See scanner.l prefix option.
- * 
+ *
  * Unfortunately the implementation relies on this trick with redefining class name
  * with a preprocessor macro. See GNU Flex manual, "Generating C++ Scanners" section
  */
@@ -55,17 +54,19 @@
 
 #include "LocationProvider.h"
 
-namespace Gnocchi {
+namespace Gnocchi
+{
+  using namespace std;
 
-  class LexicalException : std::runtime_error {
+  class LexicalException : runtime_error
+  {
 
   public:
-    LexicalException(std::string msg) : std::runtime_error(msg) {}
-
+    LexicalException(string msg) : runtime_error(msg) {}
   };
 
-
-  class Scanner : public yyFlexLexer {
+  class Scanner : public yyFlexLexer
+  {
   public:
     Scanner(LocationProvider &driver) : m_driver(driver) {}
 
@@ -73,11 +74,12 @@ namespace Gnocchi {
 
     virtual Gnocchi::Parser::symbol_type get_next_token();
 
-    virtual void LexerError(const char *msg) {
+    virtual void LexerError(const char *msg)
+    {
       throw LexicalException(msg);
     }
 
-    std::string parseString(char *text);
+    string parseString(char *text);
 
     static char getEscapeChar(char c);
 

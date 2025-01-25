@@ -91,7 +91,7 @@ package en {
 
       LiteralExpr *--> Literal
 
-      note left of LiteralExpr : "using LiteralVariant = std::variant<long long, float, double, char, std::string, bool>;"
+      note left of LiteralExpr : "using LiteralVariant = variant<long long, float, double, char, string, bool>;"
 
       interface ExprVisitor {
         {abstract} + visit(expr: LiteralExpr)

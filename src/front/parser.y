@@ -57,7 +57,7 @@
 
 %token EOF 0;
 
-%token <std::string> IDENTIFIER;
+%token <string> IDENTIFIER;
 
 /* keywords */
 %token EDGE "edge";
@@ -117,7 +117,7 @@
 %token <unsigned long long> UNSIGNED_INTEGER_LITERAL;
 %token <bool> BOOL_LITERAL;
 %token <char> CHAR_LITERAL;
-%token <std::string> STRING_LITERAL;
+%token <string> STRING_LITERAL;
 %token <double> DOUBLE_LITERAL;
 %token <float> FLOAT_LITERAL;
 
@@ -247,7 +247,7 @@ expression : IDENTIFIER {
 %%
 
 // Bison expects us to provide implementation - otherwise linker complains
-void Parser::error(const location &loc , const std::string &message) {
+void Parser::error(const location &loc , const string &message) {
         
         // Location should be initialized inside scanner action, but is not in this example.
         // Let's grab location directly from driver class.

@@ -5,13 +5,14 @@
 
 namespace EN
 {
+    using namespace std;
     class Edge
     {
     public:
-        Edge(std::shared_ptr<Expr> source, std::shared_ptr<Expr> destination, std::shared_ptr<Expr> when, std::shared_ptr<Expr> with);
-        std::shared_ptr<Expr> source;
-        std::shared_ptr<Expr> destination;
-        std::shared_ptr<Expr> when;
-        std::shared_ptr<Expr> with;
+        Edge(shared_ptr<Expr> source, shared_ptr<Expr> destination, shared_ptr<Expr> when, shared_ptr<Expr> with);
+        shared_ptr<Expr> source;
+        shared_ptr<Expr> destination;
+        shared_ptr<Expr> when;
+        shared_ptr<Expr> with;
     };
 }
