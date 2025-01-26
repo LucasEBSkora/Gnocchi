@@ -30,7 +30,7 @@ namespace EN
         {23.f, "23f", "testFloatToString"},
         {0.12, "0.12", "testDoubleToString"},
         {'a', "a", "testCharToString"},
-        {"bipbop", "bipbop", "testStringLiteral"},
+        {"bipbop", "\"bipbop\"", "testStringLiteral"},
         {true, "true", "testTrueToString"},
         {false, "false", "testFalseToString"},
     };

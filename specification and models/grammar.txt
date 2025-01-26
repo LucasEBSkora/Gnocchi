@@ -160,7 +160,7 @@ Holon expressions apply holon definitions to the tree, leading to all other oper
 holons with both sets of parameters and named with identifiers are left-associative with
  the lowest precedence
 
-expr -> <binary_holon> | <notify> 
+expr -> <binary_holon>
 
 binary_holon -> <assignment> ( id <assignment>)*
 assignment -> <logical_or> ( <assignment_op> <assignment> )
@@ -194,6 +194,8 @@ notification_or_field -> ""
 primary -> <notify> | int_literal | float_literal | double_literal | char_literal | string_literal
                 id | "this" | "true" | "false" | "(" <expr> ")" | "this" "'" | "head"
 
-notify -> <param_list> <notifies_operator> access";"
+notify -> <param_list>? <notifies_operator> <access> ";"
+
+<param_list> -> <expr> ("," <expr>)*
 
 import_statement -> "import" (id | string_literal)

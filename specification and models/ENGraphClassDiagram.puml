@@ -1,169 +1,178 @@
 @startuml "class"
 
-package en {
-
-  package graph {
-
-    package type {
-      abstract class Type {
-        + toString() : string
-        {abstract} + accept(visit: TypeVisitor)
-      }
-
-      class PrimitiveType extends Type {
-        {static} flyweightMap : map<Primitive, PrimitiveType>
-        {static} + getPrimitiveType(value: Primitive) : PrimitiveType
-        + accept(visit: TypeVisitor)
-        + PrimitiveType(value: Primitive)
-      }
-
-      PrimitiveType "1" *--> "1" Primitive
-
-      enum Primitive {
-        INT8
-        INT16
-        INT24
-        INT32
-        INT
-        UIT8
-        UINT16
-        UINT24
-        UINT32
-        UINT
-        FLOAT
-        DOUBLE
-        NUMBER
-        BOOL
-        CHAR
-      }
-
-      class ArrayType extends Type {
-        + dimensions: vector<int>
-        + accept(visit: TypeVisitor)
-        + ArrayType(baseType, vector<int> dimensions)
-      }
-
-      ArrayType o--> "1" Type
-
-      interface TypeVisitor {
-        {abstract} + visit(type: PrimitiveType)
-        {abstract} + visit(type: ArrayType)
-      }
-
-      TypeVisitor ..> Type : visits
-
-      class TypeToStringVisitor implements TypeVisitor {
-        - ss: stringstream
-        {abstract} + visit(type: PrimitiveType)
-        {abstract} + visit(type: ArrayType)
-        getResult(): string
-      }
-
-    }
-
-    package expr {
-      abstract class Expr {
-        +toString() : string
-        {abstract} + accept(visit: ExprVisitor)
-      }
-
-      enum Literal {
-        INT
-        FLOAT
-        DOUBLE
-        CHAR
-        STRING
-        BOOL
-      }
-
-
-      class LiteralExpr extends Expr {
-        + accept(visit: ExprVisitor)
-        getLiteralType() : Literal
-        getInt() : long long
-        getFloat() : float
-        getDouble() : double
-        getChar() : char
-        getString() : string
-        getBool() : bool
-        get() : LiteralVariant
-      }
-
-      LiteralExpr *--> Literal
-
-      note left of LiteralExpr : "using LiteralVariant = variant<long long, float, double, char, string, bool>;"
-
-      interface ExprVisitor {
-        {abstract} + visit(expr: LiteralExpr)
-      }
-
-      ExprVisitor ..> Expr : visits
-
-      class ExprToStringVisitor implements ExprVisitor {
-        - ss: stringstream
-        {abstract} + visit(type: LiteralExpr)
-        getResult(): string
-      }
-
-    }
-
-    enum Visibility
-    {
-      DEFAULT
-      PRIVATE
-      PUBLIC
-    }
-
-    class Graph extends Scope
-
-    class Scope {
-      + addVertex(v: Vertex)
-      + addEdge(e: Edge)
-      + getVertices() : Vertex
-      + hasVertex(name : string) : bool
-      + getVertex(id : string) : Vertex
-      + getEdges() : Edge
-    }
-
-    Scope "1" -->  "*" Vertex
-    Scope "1" -->  "*" Edge
-
-    enum AllowedOperations
-    {
-      NONE
-      READ
-      WRITE
-      NOTIFY
-      ALL
-    }
-
-    class Vertex {
-      + id : string
-      + boundState : bool
-      + allowedOperations : int
-      + interfaces : vector<string>
-      + getEdges() : vector<Edge>
-    }
-
-    Vertex "1" --> "1" Visibility
-    Vertex "1" --> "1" type.Type
-    Vertex "1" --> "*" NotificationParameter
-    Vertex "1" --> "0..4" expr.Expr : stateExpr, initialValue, defaultWhen, defaultWith
-    Vertex "1" --> "*" Edge
-    Vertex .. AllowedOperations
-
-    class Edge
-    Edge "1" --> "2..4" expr.Expr: source, destination, when, with
-
-    class NotificationParameter
-    {
-      + name: string;
-    }
-
-    NotificationParameter "1" --> "1" Type
-    NotificationParameter "1" --> "0..1" Expr : default
-
-    note top of Graph : "this diagram doesn't show constructors and destructors"
-  }
+abstract class Type {
+  + toString() : string
+  {abstract} + accept(visit: TypeVisitor)
 }
+
+class PrimitiveType extends Type {
+  {static} flyweightMap : map<Primitive, PrimitiveType>
+  {static} + getPrimitiveType(value: Primitive) : PrimitiveType
+  + accept(visit: TypeVisitor)
+  + PrimitiveType(value: Primitive)
+}
+
+PrimitiveType "1" *--> "1" Primitive
+
+enum Primitive {
+  INT8
+  INT16
+  INT24
+  INT32
+  INT
+  UIT8
+  UINT16
+  UINT24
+  UINT32
+  UINT
+  FLOAT
+  DOUBLE
+  NUMBER
+  BOOL
+  CHAR
+}
+
+class ArrayType extends Type {
+  + dimensions: vector<int>
+  + accept(visit: TypeVisitor)
+  + ArrayType(baseType, vector<int> dimensions)
+}
+
+ArrayType o--> "1" Type
+
+interface TypeVisitor {
+  {abstract} + visit(type: PrimitiveType)
+  {abstract} + visit(type: ArrayType)
+}
+
+TypeVisitor ..> Type : visits
+
+class TypeToStringVisitor implements TypeVisitor {
+  - ss: stringstream
+  {abstract} + visit(type: PrimitiveType)
+  {abstract} + visit(type: ArrayType)
+  getResult(): string
+}
+
+
+abstract class Expr {
+  +toString() : string
+  {abstract} + accept(visit: ExprVisitor)
+}
+
+enum Literal {
+  INT
+  FLOAT
+  DOUBLE
+  CHAR
+  STRING
+  BOOL
+}
+
+
+class LiteralExpr extends Expr {
+  + accept(visit: ExprVisitor)
+  getLiteralType() : Literal
+  getInt() : long long
+  getFloat() : float
+  getDouble() : double
+  getChar() : char
+  getString() : string
+  getBool() : bool
+  get() : LiteralVariant
+}
+
+LiteralExpr *--> Literal
+
+note left of LiteralExpr : "using LiteralVariant = variant<long long, float, double, char, string, bool>;"
+
+class VertexAccessExpr extends Expr {
+  + id : string
+  + accept(visit: ExprVisitor)
+  + getVertex(): Vertex
+  + resolve(vertex : Vertex)
+  - resolve()
+}
+
+VertexAccessExpr "*" --> "1" Scope
+VertexAccessExpr "*" --> "1" Vertex
+
+class NotifyExpr extends Expr {
+  + accept(visit: ExprVisitor)
+}
+
+NotifyExpr "1" --> "*" Expr : params, target
+
+
+
+interface ExprVisitor {
+  {abstract} + visit(expr: LiteralExpr)
+}
+
+ExprVisitor ..> Expr : visits
+
+class ExprToStringVisitor implements ExprVisitor {
+  - ss: stringstream
+  {abstract} + visit(type: LiteralExpr)
+  getResult(): string
+}
+
+enum Visibility
+{
+  DEFAULT
+  PRIVATE
+  PUBLIC
+}
+
+class Graph extends Scope
+
+class Scope {
+  + addVertex(v: Vertex)
+  + addEdge(e: Edge)
+  + getVertices() : Vertex
+  + hasVertex(name : string) : bool
+  + getVertex(id : string) : Vertex
+  + getEdges() : Edge
+}
+
+Scope "1" -->  "*" Vertex
+Scope "1" -->  "*" Edge
+
+enum AllowedOperations
+{
+  NONE
+  READ
+  WRITE
+  NOTIFY
+  ALL
+}
+
+class Vertex {
+  + id : string
+  + boundState : bool
+  + allowedOperations : int
+  + interfaces : vector<string>
+  + getEdges() : vector<Edge>
+}
+
+Vertex "1" --> "1" Visibility
+Vertex "1" --> "1" Type
+Vertex "1" --> "*" NotificationParameter
+Vertex "1" --> "0..4" Expr : stateExpr, initialValue, defaultWhen, defaultWith
+Vertex "1" --> "*" Edge
+Vertex .. AllowedOperations
+
+class Edge
+Edge "1" --> "2..4" Expr: source, destination, when, with
+
+class NotificationParameter
+{
+  + name: string;
+}
+
+NotificationParameter "1" --> "1" Type
+NotificationParameter "1" --> "0..1" Expr : default
+
+note top of Graph : "this diagram doesn't show constructors and destructors"
+
 @enduml

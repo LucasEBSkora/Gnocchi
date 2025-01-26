@@ -101,7 +101,7 @@ namespace EN
       obj->setInitialValue(expr);
       shared_ptr<Vertex> v = obj->build();
       ASSERT_TRUE(v->initialValue);
-      ASSERT_EQ("potato", v->initialValue->toString());
+      ASSERT_EQ("\"potato\"", v->initialValue->toString());
     }
 
     void testDisableAllOperations()

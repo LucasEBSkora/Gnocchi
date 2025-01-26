@@ -1,5 +1,7 @@
 #include "ExprToStringVisitor.h"
 #include "LiteralExpr.h"
+#include "NotifyExpr.h"
+#include "VertexAccessExpr.h"
 
 namespace EN
 {
@@ -27,7 +29,7 @@ namespace EN
             ss << expr.getChar();
             break;
         case LiteralExpr::STRING:
-            ss << expr.getString();
+            ss << '"' << expr.getString() << '"';
             break;
         case LiteralExpr::BOOL:
             ss << (expr.getBool() ? "true" : "false");
@@ -36,5 +38,23 @@ namespace EN
         default:
             break;
         }
+    }
+
+    void ExprToStringVisitor::visit(const NotifyExpr &expr)
+    {
+
+        ss << "( ";
+        for (auto param : expr.params)
+        {
+            param->accept(*this);
+            ss << ' ';
+        }
+        ss << ") -> ";
+        expr.target->accept(*this);
+    }
+
+    void ExprToStringVisitor::visit(const VertexAccessExpr &expr)
+    {
+        ss << expr.id;
     }
 }
