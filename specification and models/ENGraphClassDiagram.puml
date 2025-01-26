@@ -103,17 +103,54 @@ class NotifyExpr extends Expr {
 
 NotifyExpr "1" --> "*" Expr : params, target
 
+class UnaryExpr extends Expr {
+  + accept(visit: ExprVisitor)
+}
 
+UnaryExpr "1" --> "1" Expr : operand
+UnaryExpr --> Direction
+UnaryExpr --> Operator
+
+enum Direction {
+  LEFT
+  RIGHT
+}
+
+class BinaryExpr extends Expr {
+  + accept(visit: ExprVisitor)
+}
+
+BinaryExpr "1" --> "2" Expr : left,right
+BinaryExpr --> Operator
+
+
+enum Operator {
+  HOLON_OP
+  ASSIGN
+  ASSIGN_PLUS
+  ...
+  BINARY_NOT
+  INC
+  DEC
+}
 
 interface ExprVisitor {
   {abstract} + visit(expr: LiteralExpr)
+  {abstract} + visit(expr: NotifyExpr)
+  {abstract} + visit(expr: VertexAccessExpr)
+  {abstract} + visit(expr: UnaryExpr)
+  {abstract} + visit(expr: BinaryExpr)
 }
 
 ExprVisitor ..> Expr : visits
 
 class ExprToStringVisitor implements ExprVisitor {
   - ss: stringstream
-  {abstract} + visit(type: LiteralExpr)
+  + visit(type: LiteralExpr)
+  + visit(expr: NotifyExpr)
+  + visit(expr: VertexAccessExpr)
+  + visit(expr: UnaryExpr)
+  + visit(expr: BinaryExpr)
   getResult(): string
 }
 
@@ -153,6 +190,7 @@ class Vertex {
   + allowedOperations : int
   + interfaces : vector<string>
   + getEdges() : vector<Edge>
+  + operationAllowed(op: AllowedOperations) : bool
 }
 
 Vertex "1" --> "1" Visibility
@@ -172,7 +210,5 @@ class NotificationParameter
 
 NotificationParameter "1" --> "1" Type
 NotificationParameter "1" --> "0..1" Expr : default
-
-note top of Graph : "this diagram doesn't show constructors and destructors"
 
 @enduml

@@ -53,6 +53,7 @@ namespace EN
         const shared_ptr<Expr> defaultWith;
 
         const vector<shared_ptr<Edge>> getEdges() const;
+        bool operationAllowed(AllowedOperations op) const;
 
     private:
         const vector<shared_ptr<Edge>> bodyEdges;

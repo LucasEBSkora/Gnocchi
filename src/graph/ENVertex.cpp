@@ -33,4 +33,9 @@ namespace EN
         return bodyEdges;
     }
 
+    bool Vertex::operationAllowed(AllowedOperations op) const
+    {
+        return allowedOperations & int(op);
+    }
+
 }
