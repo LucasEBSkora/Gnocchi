@@ -44,9 +44,7 @@
 //      #include <FlexLexer.h>
 //      ...
 
-#ifndef __FLEX_LEXER_H
-// Never included before - need to define base class.
-#define __FLEX_LEXER_H
+#pragma once
 
 // NOTE: THIS FILE IS ONLY HERE BECAUSE IT'S HARD FOR WINDOWS TO FIND IT BY DEFAULT.
 // It doesn't do anything if you're on linux because it should find it by itself.
@@ -244,5 +242,3 @@ protected:
 };
 
 }
-
-#endif // yyFlexLexer || ! yyFlexLexerOnce

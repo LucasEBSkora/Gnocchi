@@ -1,5 +1,4 @@
-#ifndef __LOCATION_PROVIDER_H__
-#define __LOCATION_PROVIDER_H__
+#pragma once
 
 #include <string>
 
@@ -29,5 +28,3 @@ namespace Gnocchi
     unsigned int m_location_col;
   };
 }
-
-#endif

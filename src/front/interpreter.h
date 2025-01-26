@@ -26,8 +26,7 @@
  *
  */
 
-#ifndef INTERPRETER_H
-#define INTERPRETER_H
+#pragma once
 
 #include <vector>
 
@@ -61,5 +60,3 @@ namespace Gnocchi
   };
 
 }
-
-#endif // INTERPRETER_H

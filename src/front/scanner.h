@@ -26,8 +26,7 @@
  *
  */
 
-#ifndef SCANNER_H
-#define SCANNER_H
+#pragma once
 
 /**
  * Generated Flex class name is yyFlexLexer by default. If we want to use more flex-generated
@@ -88,5 +87,3 @@ namespace Gnocchi
   };
 
 }
-
-#endif
