@@ -35,6 +35,8 @@
 
 #include "parser.hpp"
 
+#include "ENGraph.h"
+
 namespace Gnocchi
 {
   using namespace std;
@@ -50,13 +52,14 @@ namespace Gnocchi
     void switchInputStream(istream *is);
 
     friend class Parser;
-
+    
     friend class Scanner;
 
   private:
     LocationProvider locationProvider;
     Scanner m_scanner;
     Parser m_parser;
+    EN::Graph graph; 
   };
 
 }

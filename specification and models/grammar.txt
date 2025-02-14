@@ -1,4 +1,7 @@
-program -> <statement>+
+program -> <statements> 
+
+statements -> <statement> <statements>
+             | "" 
 
 statement ->  <block>
             | <definition>
@@ -6,23 +9,24 @@ statement ->  <block>
             | <expr> ";"
             | <import_statement> ";"
 
-<block> -> "atom"? "{" <statement>+ "}" ";"
+<block> -> "atom"? "{" <statements> "}" ";"
 
-<definition> -> <definition_header> <vertex_definition> ";"
-                | <definition_header> <holon_definition> ";"
-                | <definition_header> <interface_definition> ";"
+<definition> ->  <vertex_definition> ";"
+                |  <holon_definition> ";"
+                |  <interface_definition> ";"
 
-definition_header -> <visibility>? ((id | "this" | "head") <definition_ op>)?
-visibility -> "public" | "private"
+definition_header -> <visibility> (<name> <definition_op>)?
+visibility -> "public" | "private" | ""
+name -> id | "head"
 definition_op -> "is"
 
-vertex_definition ->  "vertex" <primitive_type>? <notification_params>? <state_expr>? <interfaces>? <vertex_body>
+vertex_definition -> <definition_header> "vertex" <primitive_type>? <notification_params>? <state_expr>? <interfaces>? <vertex_body>
 
 notes: int = int8 U int16 U int24 U int32, uint = uint8 U uint16 U uint24 U uint32, double = float U double and number = int U uint U double 
 for pattern matching purposes
 
-primitive_type -> <primitive_type_without_array> ("[" <expr> "]")*
-primitive_type_without_array -> "int8" | "int16" | "int24" | "int32" | "int" | "uint8" | "uint16" | "uint24" | "uint32" | "uint"
+primitive_type -> <scalar_primitive_type> ("[" <expr> "]")*
+scalar_primitive_type -> "int8" | "int16" | "int24" | "int32" | "int" | "uint8" | "uint16" | "uint24" | "uint32" | "uint"
                 | "float" | "double" | "number" | "bool" | "char" | <reference_type>
 <reference_type> -> "ref"
                 |   "ref"  ("to" <type>)
@@ -68,7 +72,7 @@ operation -> "read" | "notify" | "listen"
 
 initial_value -> "initialise" <expr> 
 
-holon_definition -> "holon" <holon_signatures> ( ":" <interfaces>)? <block>
+holon_definition -> <definition_header> "holon" <holon_signatures> ( ":" <interfaces>)? <block>
 
 holon_signatures -> <holon_signature> ("," <holon_signature>) 
 
@@ -143,7 +147,7 @@ pattern_part -> "is" <type> //to identify a value of a type
 
 in_type_clause ->  "in" "{" <type> ("," <type>)*  "}"    
 
-interface_definition -> "interface" <interface_body>
+interface_definition -> <definition_header> "interface" <interface_body>
 
 interface_body -> "{" <interface_body_definition>* "}"
 
@@ -171,15 +175,15 @@ logical_and -> <bitwise_or> ( "&&" <logical_and>)*
 bitwise_or -> <bitwise_xor> ( "|" <bitwise_or>)*
 bitwise_xor -> <bitwise_and> ( "^" <bitwise_xor>)*
 bitwise_and -> <equality> ( "&" <bitwise_and>)*
-equality -> <comparison> ( ("=="| "!=") <equality>)*
-comparison -> <bit_shift> ( ("<"| "<=" | ">"| ">=") <comparison>)*
-bit_shift -> <addition> ( ("<<" | ">>") <bit_shift>)*
-addition -> <multiplication> ( ("+" | "-") <addition>)*
-multiplication -> <holon_parametric_operator> ( ("*" | "/" | "%") <multiplication>)*
+equality -> <comparison> ( ( "=="| "!=") <equality>)*
+comparison -> <bit_shift> ( ( "<"| "<=" | ">"| ">=") <comparison>)*
+bit_shift -> <addition> ( ( "<<" | ">>") <bit_shift>)*
+addition -> <multiplication> ( ( "+" | "-") <addition>)*
+multiplication -> <holon_parametric_operator> ( ( "*" | "/" | "%") <multiplication>)*
 holon_parametric_operator -> <unary_left> ( "<>" <holon_parametric_operator>)*
 unary_left -> <unary_right>
         | ("<>" | <unary_left_operator>) <unary_left>
-unary_right -> <access> ("<>" | <unary_right_operator> | "'")*
+unary_right -> <access> ("<>" | <unary_right_operator>)*
 access -> <primary> <notification_or_field>
 
 // second and third case are notifications, fourth is holon acess, fifth is array access OR notification, and sixth and seventh are holon instantiations, 
@@ -194,7 +198,7 @@ notification_or_field -> ""
 primary -> <notify> | int_literal | float_literal | double_literal | char_literal | string_literal
                 id | "this" | "true" | "false" | "(" <expr> ")" | "this" "'" | "head"
 
-notify -> <param_list>? <notifies_operator> <access> ";"
+notify -> <param_list>? <notifies_operator> <access>
 
 <param_list> -> <expr> ("," <expr>)*
 

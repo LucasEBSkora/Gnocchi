@@ -16,7 +16,10 @@
     #include <memory>
     #include <fstream>
 
+    #include "ENGraph.h"
+
     using namespace std;
+
 
     namespace Gnocchi {
         class Scanner;
@@ -33,6 +36,7 @@
     #include "parser.hpp"
     #include "interpreter.h"
     #include "location.hh"
+    #include "ENGraph.h"
     
     using namespace Gnocchi;
     
@@ -48,6 +52,7 @@
 
 %parse-param {Scanner &scanner}
 %parse-param {Interpreter &driver}
+%parse-param {EN::Graph &graph}
 
 %locations
 %define parse.trace
@@ -173,76 +178,137 @@
 %token DOT .;
 %token APOSTROPHE "'";
 
-%left LT GT EQ NE LE GE
-%right LPAR LSBRACKET LCBRACKET ASSIGN 
-%left PLUS MINUS RPAR RSBRACKET RCBRACKET
+%left IDENTIFIER
+%left NOTIFY_OP
+%right ASSIGN ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MUL ASSIGN_DIV ASSIGN_MOD ASSIGN_AND ASSIGN_OR ASSIGN_XOR
+%left LOGIC_OR
+%left LOGIC_XOR
+%left LOGIC_AND
+%left BINARY_OR
+%left BINARY_XOR
+%left BINARY_AND
+%left EQ NE
+%left LT LE GT GE
+%left SHIFT_LEFT SHIFT_RIGHT
+%left PLUS MINUS
+%left MUL DIV MOD
+%left HOLON_OP
+%right LOGIC_NOT BINARY_NOT INC DEC
+%nonassoc APOSTROPHE IS
 
 %start program
 
 %%
 
-program : %empty {   
-            driver.clear();
-        }
-        | program statement {
-        }
-        ;
+program : { driver.clear(); } statements
 
-statement : if_statement 
-          | while_statement
-          | declare_statement
-          | delete_statement
-          | assign_statement;
+statements : statement statements 
+           | %empty
+
+statement : definition
+          | "edge" create_edge ";"
+          | expr ";"
             
-if_statement : "if" "(" expression  ")" "{" statements "}" {
-                };
+definition : vertex_definition
 
-while_statement : "while" "(" expression ")" "{" statements "}" {
-                };
+vertex_definition : definition_header "vertex" vertex_type notification_params state_expr interfaces vertex_body
 
-declare_statement : "declare" IDENTIFIER ";" {
-                  }
-                  | "declare" IDENTIFIER "=" expression ";" {
-                  }
-                  | "declare" IDENTIFIER "[" UNSIGNED_INTEGER_LITERAL "]" ";"{
-                  };
+definition_header : visibility | visibility name "is"
 
-delete_statement : "delete" IDENTIFIER ";"{
-                  };
+name : IDENTIFIER | "head"
 
-assign_statement : IDENTIFIER "=" expression ";" {
-                  }
-                 | IDENTIFIER "[" expression "]" "=" expression ";" {
-                  };
+visibility : "public" | "private" | %empty
 
-statements : statement {
-            }
-           | statement statements {
-           };
+vertex_type : primitive_type | %empty
 
-expression : IDENTIFIER {
-            } 
-            | IDENTIFIER "[" expression "]" {
-            }
-            | UNSIGNED_INTEGER_LITERAL {
-            }
-            | expression "+" expression {
-            }
-            | expression "-" expression {
-            }
-            | expression "==" expression {
-            }
-            | expression  "!="  expression {
-            }
-            | expression ">" expression {
-            }
-            | expression ">=" expression {
-            }
-            | expression "<" expression {
-            }
-            | expression "<=" expression {
-            }
-            ;
+notification_params : %empty | "(" notification_param param_list ")"
+
+param_list : "," notification_param param_list | %empty
+
+notification_param : IDENTIFIER "is" primitive_type |
+                     IDENTIFIER "is" primitive_type "default" expr
+
+state_expr : %empty | expr | "bound" expr
+
+interfaces : %empty | IDENTIFIER | IDENTIFIER "," interfaces
+
+vertex_body : "," vertex_body_part vertex_body | %empty
+
+vertex_body_part : default_notify | create_edge | enabled_ops | initial_value
+
+default_notify : "this" "->" "default" edge_function
+
+enabled_ops : "enables" operations | "disables" operations
+
+operations : operation operations | %empty
+
+operation : "read" | "notify" | "listen"
+
+initial_value : "initialise" expr
+
+create_edge : access "->" vertex_list edge_function
+            |  vertex_list "->"  access edge_function
+
+vertex_list : access _vertex_list
+
+_vertex_list : %empty | "," access _vertex_list
+
+edge_function : when_clause with_clause
+
+when_clause : %empty | "when" expr
+with_clause : %empty | "with" expr 
+
+primitive_type : scalar_primitive_type | primitive_type "[" expr "]"
+
+scalar_primitive_type : "int8" | "int16" | "int24" | "int32" | "int" | "uint8"
+                      | "uint16" | "uint24" | "uint32" | "uint" | "float"
+                      | "double" | "number" | "bool" | "char"
+
+expr : notify | binary_expr
+
+binary_expr : unary_left binary_op unary_left
+
+binary_op : IDENTIFIER | ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^="  
+            | "||" | "^^" | "&&" | "|"  | "^"  | "&"  | "==" | "!=" | "<" | "<="
+            | ">" | ">=" | "<<" | ">>" | "+"  | "-" | "*"  | "/"  | "%" | "<>"
+
+
+unary_left : unary_right
+            | "<>" unary_left
+            | unary_left_op unary_left
+
+unary_left_op : "-" | "!" | "~" | "++" | "--"
+
+unary_right : access 
+            | "<>" unary_right
+            | unary_right_operator unary_right
+
+unary_right_operator : "++" | "--"
+
+access : primary_expr
+       | access "(" ")" access
+       | access "(" param_list ")" access 
+       | access "[" expr "]" access
+
+param_list :  expr _param_list
+_param_list : %empty | "," expr _param_list
+
+primary_expr : notify 
+             | SIGNED_INTEGER_LITERAL
+             | UNSIGNED_INTEGER_LITERAL
+             | BOOL_LITERAL
+             | CHAR_LITERAL
+             | STRING_LITERAL
+             | DOUBLE_LITERAL
+             | FLOAT_LITERAL
+             | name
+             | "this" "'"
+             | "this"
+             | "(" expr ")" 
+
+notify :  "->" access
+         | param_list "->" access
+
 
 %%
 

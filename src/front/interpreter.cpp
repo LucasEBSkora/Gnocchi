@@ -33,7 +33,7 @@
 using namespace Gnocchi;
 
 Interpreter::Interpreter(string filename) : locationProvider{filename}, m_scanner(locationProvider),
-                                            m_parser(m_scanner, *this /*, stmts*/)
+                                            m_parser(m_scanner, *this, graph)
 {
 }
 
