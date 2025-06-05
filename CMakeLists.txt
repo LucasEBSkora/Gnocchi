@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18.0)
 project(Gnocchi VERSION 0.1.0)
 
-set(GENERATED_DIRECTORY ${CMAKE_BINARY_DIR}/build/generated)
+set(GENERATED_DIRECTORY ${CMAKE_BINARY_DIR}/generated)
 
 file(MAKE_DIRECTORY ${GENERATED_DIRECTORY})
 
@@ -16,7 +16,7 @@ find_package(BISON REQUIRED)
 bison_target(parser
     ${SOURCE_DIR}/front/parser.y 
     ${GENERATED_DIRECTORY}/parser.cpp
-    COMPILE_FLAGS "-Wcounterexamples"
+    COMPILE_FLAGS "-Wcounterexamples -Werror"
 )
 
 flex_target(lexer 

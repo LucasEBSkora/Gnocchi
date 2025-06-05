@@ -20,7 +20,6 @@
 
     using namespace std;
 
-
     namespace Gnocchi {
         class Scanner;
         class Interpreter;
@@ -71,8 +70,10 @@
 %token HEAD "head";
 %token PUBLIC "public";
 %token PRIVATE "private";
+%token DECLARE "declare";
 %token IS "is";
 %token VERTEX "vertex";
+%token STATE "state";
 %token BOUND "bound";
 %token DEFAULT "default";
 %token WHEN "when";
@@ -141,7 +142,9 @@
 /* operators */
 %token NOTIFY_OP "->"
 %token ELLIPSIS "..."
-%token HOLON_OP "<>"
+%token HOLON_BINARY_OP "<*>"
+%token HOLON_UNARY_LEFT_OP "*>"
+%token HOLON_UNARY_RIGHT_OP "<*"
 
 %token ASSIGN ":=";
 %token ASSIGN_PLUS "+=";
@@ -192,8 +195,8 @@
 %left SHIFT_LEFT SHIFT_RIGHT
 %left PLUS MINUS
 %left MUL DIV MOD
-%left HOLON_OP
-%right LOGIC_NOT BINARY_NOT INC DEC
+%left HOLON_BINARY_OP
+%right LOGIC_NOT BINARY_NOT INC DEC HOLON_UNARY_RIGHT_OP HOLON_UNARY_LEFT_OP
 %nonassoc APOSTROPHE IS
 
 %start program
@@ -208,16 +211,17 @@ statements : statement statements
 statement : definition
           | "edge" create_edge ";"
           | expr ";"
+          | notify ";"
             
 definition : vertex_definition
 
-vertex_definition : definition_header "vertex" vertex_type notification_params state_expr interfaces vertex_body
+vertex_definition : definition_header "vertex" vertex_type notification_params vertex_body ";"
 
 definition_header : visibility | visibility name "is"
 
 name : IDENTIFIER | "head"
 
-visibility : "public" | "private" | %empty
+visibility : "public" | "private" | "declare"
 
 vertex_type : primitive_type | %empty
 
@@ -228,15 +232,11 @@ param_list : "," notification_param param_list | %empty
 notification_param : IDENTIFIER "is" primitive_type |
                      IDENTIFIER "is" primitive_type "default" expr
 
-state_expr : %empty | expr | "bound" expr
-
-interfaces : %empty | IDENTIFIER | IDENTIFIER "," interfaces
-
 vertex_body : "," vertex_body_part vertex_body | %empty
 
-vertex_body_part : default_notify | create_edge | enabled_ops | initial_value
+vertex_body_part : vertex_state | create_edge | enabled_ops | initial_value | interfaces
 
-default_notify : "this" "->" "default" edge_function
+vertex_state : "state" expr | "state" "bound" expr
 
 enabled_ops : "enables" operations | "disables" operations
 
@@ -246,8 +246,15 @@ operation : "read" | "notify" | "listen"
 
 initial_value : "initialise" expr
 
-create_edge : access "->" vertex_list edge_function
-            |  vertex_list "->"  access edge_function
+interfaces: "implements" interface_list
+
+interface_list : IDENTIFIER | IDENTIFIER interfaces
+
+create_edge : create_edge_list "->" edge_destination edge_function
+
+edge_destination : "default" | create_edge_list
+
+create_edge_list : access | "[" vertex_list "]"
 
 vertex_list : access _vertex_list
 
@@ -264,37 +271,38 @@ scalar_primitive_type : "int8" | "int16" | "int24" | "int32" | "int" | "uint8"
                       | "uint16" | "uint24" | "uint32" | "uint" | "float"
                       | "double" | "number" | "bool" | "char"
 
-expr : notify | binary_expr
+expr : binary_expr
 
 binary_expr : unary_left binary_op unary_left
 
 binary_op : IDENTIFIER | ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^="  
             | "||" | "^^" | "&&" | "|"  | "^"  | "&"  | "==" | "!=" | "<" | "<="
-            | ">" | ">=" | "<<" | ">>" | "+"  | "-" | "*"  | "/"  | "%" | "<>"
+            | ">" | ">=" | "<<" | ">>" | "+"  | "-" | "*"  | "/"  | "%" | "<*>"
 
 
 unary_left : unary_right
-            | "<>" unary_left
+            | "*>" unary_left
             | unary_left_op unary_left
 
 unary_left_op : "-" | "!" | "~" | "++" | "--"
 
 unary_right : access 
-            | "<>" unary_right
-            | unary_right_operator unary_right
+            | unary_right "<*"
+            | unary_right unary_right_operator
 
 unary_right_operator : "++" | "--"
 
-access : primary_expr
-       | access "(" ")" access
-       | access "(" param_list ")" access 
-       | access "[" expr "]" access
+access : primary_expr notification_or_field
 
-param_list :  expr _param_list
-_param_list : %empty | "," expr _param_list
+notification_or_field : %empty
+                      | "(" ")" notification_or_field
+                      | "(" expr_list ")" notification_or_field
+                      | "[" expr "]" notification_or_field
 
-primary_expr : notify 
-             | SIGNED_INTEGER_LITERAL
+expr_list :  expr _expr_list
+_expr_list : %empty | "," expr _expr_list
+
+primary_expr : SIGNED_INTEGER_LITERAL
              | UNSIGNED_INTEGER_LITERAL
              | BOOL_LITERAL
              | CHAR_LITERAL
@@ -307,7 +315,7 @@ primary_expr : notify
              | "(" expr ")" 
 
 notify :  "->" access
-         | param_list "->" access
+         | expr_list "->" access
 
 
 %%

@@ -74,12 +74,20 @@ private {
 	return Gnocchi::Parser::make_PRIVATE(getLoc());
 }
 
+declare {
+	return Gnocchi::Parser::make_DECLARE(getLoc());
+}
+
 is {
 	return Gnocchi::Parser::make_IS(getLoc());
 }
 
 vertex {
 	return Gnocchi::Parser::make_VERTEX(getLoc());
+}
+
+state {
+	return Gnocchi::Parser::make_STATE(getLoc());
 }
 
 bound {
@@ -252,8 +260,16 @@ as {
 	return Gnocchi::Parser::make_ELLIPSIS(getLoc());
 }
 
-"<>" {
-	return Gnocchi::Parser::make_HOLON_OP(getLoc());
+"<*>" {
+	return Gnocchi::Parser::make_HOLON_BINARY_OP(getLoc());
+}
+
+"*>" {
+	return Gnocchi::Parser::make_HOLON_UNARY_LEFT_OP(getLoc());
+}
+
+"<*" {
+	return Gnocchi::Parser::make_HOLON_UNARY_RIGHT_OP(getLoc());
 }
 
 ":=" {
