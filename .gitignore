@@ -32,5 +32,6 @@
 *.app
 
 .vscode
+.cache
 build/
 bin/

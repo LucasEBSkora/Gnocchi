@@ -20,7 +20,7 @@ namespace EN
             INT24,
             INT32,
             INT,
-            UIT8,
+            UINT8,
             UINT16,
             UINT24,
             UINT32,
@@ -34,6 +34,7 @@ namespace EN
 
         static const weak_ptr<PrimitiveType> getPrimitiveType(Primitive value);
         virtual void accept(TypeVisitor &visit) const override;
+        virtual bool operator==(const Type& other) const override;
         virtual ~PrimitiveType();
         const Primitive value;
         // Public just so we can use make_shared on this without any tricks, not to be used

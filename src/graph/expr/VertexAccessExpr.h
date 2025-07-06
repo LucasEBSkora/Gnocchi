@@ -2,19 +2,18 @@
 
 #include "ENExpr.h"
 #include "ENVertex.h"
-#include "ENScope.h"
 
 #include <string>
 #include <memory>
 
 namespace EN
 {
+    class Scope;
 
     class VertexAccessExpr : public Expr
     {
     public:
-        VertexAccessExpr(string id);
-        VertexAccessExpr(string id, weak_ptr<Scope> scope);
+        VertexAccessExpr(string id, Scope& scope);
         ~VertexAccessExpr();
         virtual void accept(ExprVisitor &visit) const override;
         const string id;
@@ -23,7 +22,7 @@ namespace EN
 
     private:
         void resolve();
-        weak_ptr<Scope> scope;
+        Scope& scope;
         weak_ptr<Vertex> vertex;
     };
 }

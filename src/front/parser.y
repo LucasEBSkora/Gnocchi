@@ -17,6 +17,8 @@
     #include <fstream>
 
     #include "ENGraph.h"
+    #include "ENExprs.h"
+    #include "ENOperators.h"
 
     using namespace std;
 
@@ -29,13 +31,11 @@
 
 %code top
 {
-    #include <iostream>
     #include <fstream>
     #include "scanner.h"
     #include "parser.hpp"
     #include "interpreter.h"
     #include "location.hh"
-    #include "ENGraph.h"
     
     using namespace Gnocchi;
     
@@ -68,9 +68,9 @@
 %token ATOM "atom";
 %token THIS "this";
 %token HEAD "head";
-%token PUBLIC "public";
-%token PRIVATE "private";
-%token DECLARE "declare";
+%token <EN::Visibility> PUBLIC "public";
+%token <EN::Visibility> PRIVATE "private";
+%token <EN::Visibility> DECLARE "declare";
 %token IS "is";
 %token VERTEX "vertex";
 %token STATE "state";
@@ -92,23 +92,23 @@
 
 /* type names */
 
-%token INT "int";
-%token INT8 "int8";
-%token INT16 "int16";
-%token INT24 "int24";
-%token INT32 "int32";
+%token <std::weak_ptr<EN::Type>> INT "int";
+%token <std::weak_ptr<EN::Type>> INT8 "int8";
+%token <std::weak_ptr<EN::Type>> INT16 "int16";
+%token <std::weak_ptr<EN::Type>> INT24 "int24";
+%token <std::weak_ptr<EN::Type>> INT32 "int32";
 
-%token UINT "uint";
-%token UINT8 "uint8";
-%token UINT16 "uint16";
-%token UINT24 "uint24";
-%token UINT32 "uint32";
+%token <std::weak_ptr<EN::Type>> UINT "uint";
+%token <std::weak_ptr<EN::Type>> UINT8 "uint8";
+%token <std::weak_ptr<EN::Type>> UINT16 "uint16";
+%token <std::weak_ptr<EN::Type>> UINT24 "uint24";
+%token <std::weak_ptr<EN::Type>> UINT32 "uint32";
 
-%token FLOAT "float";
-%token DOUBLE "double";
-%token NUMBER "number";
-%token BOOL "bool";
-%token CHAR "char";
+%token <std::weak_ptr<EN::Type>> FLOAT "float";
+%token <std::weak_ptr<EN::Type>> DOUBLE "double";
+%token <std::weak_ptr<EN::Type>> NUMBER "number";
+%token <std::weak_ptr<EN::Type>> BOOL "bool";
+%token <std::weak_ptr<EN::Type>> CHAR "char";
 
 %token REF "ref";
 %token TO "to";
@@ -142,43 +142,43 @@
 /* operators */
 %token NOTIFY_OP "->"
 %token ELLIPSIS "..."
-%token HOLON_BINARY_OP "<*>"
-%token HOLON_UNARY_LEFT_OP "*>"
-%token HOLON_UNARY_RIGHT_OP "<*"
+%token <EN::Operator> HOLON_BINARY_OP "<*>"
+%token <EN::Operator> HOLON_UNARY_LEFT_OP "*>"
+%token <EN::Operator> HOLON_UNARY_RIGHT_OP "<*"
 
-%token ASSIGN ":=";
-%token ASSIGN_PLUS "+=";
-%token ASSIGN_MINUS "-=";
-%token ASSIGN_MUL "*=";
-%token ASSIGN_DIV "/=";
-%token ASSIGN_MOD "%=";
-%token ASSIGN_AND "&=";
-%token ASSIGN_OR "|=";
-%token ASSIGN_XOR "^=";
-%token LOGIC_OR "||";
-%token LOGIC_XOR "^^";
-%token LOGIC_AND "&&";
-%token BINARY_OR "|";
-%token BINARY_XOR "^";
-%token BINARY_AND "&";
-%token EQ "==";
-%token NE "!=";
-%token LT "<";
-%token LE "<=";
-%token GT ">";
-%token GE ">=";
-%token SHIFT_LEFT "<<";
-%token SHIFT_RIGHT ">>";
-%token PLUS "+";
-%token MINUS "-";
-%token MUL "*";
-%token DIV "/";
-%token MOD "%";
-%token LOGIC_NOT "!";
-%token BINARY_NOT "~";
-%token INC "++";
-%token DEC "--";
-%token DOT .;
+%token <EN::Operator> ASSIGN ":=";
+%token <EN::Operator> ASSIGN_PLUS "+=";
+%token <EN::Operator> ASSIGN_MINUS "-=";
+%token <EN::Operator> ASSIGN_MUL "*=";
+%token <EN::Operator> ASSIGN_DIV "/=";
+%token <EN::Operator> ASSIGN_MOD "%=";
+%token <EN::Operator> ASSIGN_AND "&=";
+%token <EN::Operator> ASSIGN_OR "|=";
+%token <EN::Operator> ASSIGN_XOR "^=";
+%token <EN::Operator> LOGIC_OR "||";
+%token <EN::Operator> LOGIC_XOR "^^";
+%token <EN::Operator> LOGIC_AND "&&";
+%token <EN::Operator> BINARY_OR "|";
+%token <EN::Operator> BINARY_XOR "^";
+%token <EN::Operator> BINARY_AND "&";
+%token <EN::Operator> EQ "==";
+%token <EN::Operator> NE "!=";
+%token <EN::Operator> LT "<";
+%token <EN::Operator> LE "<=";
+%token <EN::Operator> GT ">";
+%token <EN::Operator> GE ">=";
+%token <EN::Operator> SHIFT_LEFT "<<";
+%token <EN::Operator> SHIFT_RIGHT ">>";
+%token <EN::Operator> PLUS "+";
+%token <EN::Operator> MINUS "-";
+%token <EN::Operator> MUL "*";
+%token <EN::Operator> DIV "/";
+%token <EN::Operator> MOD "%";
+%token <EN::Operator> LOGIC_NOT "!";
+%token <EN::Operator> BINARY_NOT "~";
+%token <EN::Operator> INC "++";
+%token <EN::Operator> DEC "--";
+%token <EN::Operator> DOT ".";
 %token APOSTROPHE "'";
 
 %left IDENTIFIER
@@ -199,6 +199,23 @@
 %right LOGIC_NOT BINARY_NOT INC DEC HOLON_UNARY_RIGHT_OP HOLON_UNARY_LEFT_OP
 %nonassoc APOSTROPHE IS
 
+%type <string> name
+%type <std::pair<EN::Visibility, string>> definition_header
+%type <EN::Visibility> visibility
+%type <std::weak_ptr<EN::Type>> primitive_type
+%type <std::weak_ptr<EN::Type>> scalar_primitive_type
+// %type <std::weak_ptr<EN::Type>> notification_or_field
+%type <std::shared_ptr<EN::Expr>> primary_expr
+
+%type <std::shared_ptr<EN::Expr>> expr
+%type <std::shared_ptr<EN::Expr>> binary_expr
+%type <EN::Operator> binary_op
+%type <std::shared_ptr<EN::Expr>> unary_left
+%type <EN::Operator> unary_left_op
+%type <std::shared_ptr<EN::Expr>> unary_right
+%type <EN::Operator> unary_right_op
+%type <std::shared_ptr<EN::Expr>> access
+
 %start program
 
 %%
@@ -215,15 +232,22 @@ statement : definition
             
 definition : vertex_definition
 
-vertex_definition : definition_header "vertex" vertex_type notification_params vertex_body ";"
+vertex_definition : definition_header "vertex" 
+                    {
+                        driver.vertexBuilder = EN::VertexBuilder(); 
+                        driver.vertexBuilder.setVisibility($1.first); 
+                        driver.vertexBuilder.setId($1.second);
+                    }
+                    vertex_type notification_params vertex_body ";"
 
-definition_header : visibility | visibility name "is"
+definition_header : visibility { $$ = {$1, ""};} 
+                  | visibility name "is" { $$ = {$1, $2};} 
 
-name : IDENTIFIER | "head"
+name : IDENTIFIER | "head" {$$ = "head";}
 
 visibility : "public" | "private" | "declare"
 
-vertex_type : primitive_type | %empty
+vertex_type : primitive_type {driver.vertexBuilder.setType($1);} | %empty
 
 notification_params : %empty | "(" notification_param param_list ")"
 
@@ -265,7 +289,9 @@ edge_function : when_clause with_clause
 when_clause : %empty | "when" expr
 with_clause : %empty | "with" expr 
 
-primitive_type : scalar_primitive_type | primitive_type "[" expr "]"
+primitive_type : scalar_primitive_type | primitive_type "[" expr "]" {
+    auto type = graph.typeManager.addArrayType($1, {$3});
+}
 
 scalar_primitive_type : "int8" | "int16" | "int24" | "int32" | "int" | "uint8"
                       | "uint16" | "uint24" | "uint32" | "uint" | "float"
@@ -273,46 +299,57 @@ scalar_primitive_type : "int8" | "int16" | "int24" | "int32" | "int" | "uint8"
 
 expr : binary_expr
 
-binary_expr : unary_left binary_op unary_left
+binary_expr : unary_left binary_op unary_left {
+    $$ = std::make_shared<EN::BinaryExpr>($1, $2, $3);
+}
 
-binary_op : IDENTIFIER | ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^="  
+binary_op : // IDENTIFIER | 
+            ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^="  
             | "||" | "^^" | "&&" | "|"  | "^"  | "&"  | "==" | "!=" | "<" | "<="
             | ">" | ">=" | "<<" | ">>" | "+"  | "-" | "*"  | "/"  | "%" | "<*>"
 
 
 unary_left : unary_right
-            | "*>" unary_left
-            | unary_left_op unary_left
+            | "*>" unary_left {
+                $$ = std::make_shared<EN::UnaryExpr>($1, $2, EN::UnaryExpr::Direction::LEFT);
+            }
+            | unary_left_op unary_left {
+                $$ = std::make_shared<EN::UnaryExpr>($1, $2, EN::UnaryExpr::Direction::LEFT);
+            }
 
 unary_left_op : "-" | "!" | "~" | "++" | "--"
 
 unary_right : access 
-            | unary_right "<*"
-            | unary_right unary_right_operator
+            | unary_right "<*" {
+                $$ = std::make_shared<EN::UnaryExpr>($2, $1, EN::UnaryExpr::Direction::RIGHT);
+            }
+            | unary_right unary_right_op {
+                $$ = std::make_shared<EN::UnaryExpr>($2, $1, EN::UnaryExpr::Direction::RIGHT);
+            }
 
-unary_right_operator : "++" | "--"
+unary_right_op : "++" | "--"
 
-access : primary_expr notification_or_field
+access : primary_expr /* notification_or_field
 
 notification_or_field : %empty
                       | "(" ")" notification_or_field
                       | "(" expr_list ")" notification_or_field
-                      | "[" expr "]" notification_or_field
+                      | "[" expr "]" notification_or_field */
 
 expr_list :  expr _expr_list
 _expr_list : %empty | "," expr _expr_list
 
-primary_expr : SIGNED_INTEGER_LITERAL
-             | UNSIGNED_INTEGER_LITERAL
-             | BOOL_LITERAL
-             | CHAR_LITERAL
-             | STRING_LITERAL
-             | DOUBLE_LITERAL
-             | FLOAT_LITERAL
-             | name
-             | "this" "'"
-             | "this"
-             | "(" expr ")" 
+primary_expr : SIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
+             | UNSIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
+             | BOOL_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
+             | CHAR_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
+             | STRING_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
+             | DOUBLE_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
+             | FLOAT_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
+             | name {$$ = std::make_shared<EN::VertexAccessExpr>($1, graph);}
+             | "this" "'" {$$ = std::make_shared<EN::VertexAccessExpr>("this'", graph);}
+             | "this" {$$ = std::make_shared<EN::VertexAccessExpr>("this", graph);}
+             | "(" expr ")" {$$ = $2;}
 
 notify :  "->" access
          | expr_list "->" access
@@ -321,7 +358,7 @@ notify :  "->" access
 %%
 
 // Bison expects us to provide implementation - otherwise linker complains
-void Parser::error(const location &loc , const string &message) {
+void Parser::error(const location &loc, const string &message) {
         
         // Location should be initialized inside scanner action, but is not in this example.
         // Let's grab location directly from driver class.

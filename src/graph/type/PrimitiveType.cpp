@@ -28,4 +28,14 @@ namespace EN
     }
 
     PrimitiveType::PrimitiveType(Primitive value) : value{value} {}
+
+    bool PrimitiveType::operator==(const Type& other) const {
+        try {
+            const PrimitiveType& otherPrimitive = dynamic_cast<const PrimitiveType&>(other);
+            return otherPrimitive.value == value;
+        } catch (bad_cast) {
+            return false;
+        }
+        
+    }
 }

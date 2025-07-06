@@ -14,15 +14,21 @@ namespace EN
     {
     public:
         shared_ptr<Vertex> v;
-
+        EN::Scope* scope;
+        
         virtual void SetUp() override
         {
             v = VertexBuilder().setId("vertex1").build();
+            scope = new EN::Scope();
         }
-
+        
+        void tearDown() {
+            delete scope;
+        }
+        
         void resolveManuallyTest()
         {
-            VertexAccessExpr access{"vertex1"};
+            VertexAccessExpr access{"vertex1", *scope};
             ASSERT_THROW(access.getVertex(), SemanticException);
             access.resolve(v);
             ASSERT_EQ(v->id, access.getVertex().lock()->id);
@@ -30,8 +36,7 @@ namespace EN
 
         void resolveWithScope()
         {
-            shared_ptr<Scope> scope = make_shared<Scope>();
-            VertexAccessExpr access{"vertex1", scope};
+            VertexAccessExpr access{"vertex1", *scope};
             ASSERT_THROW(access.getVertex(), SemanticException);
             scope->addVertex(v);
             ASSERT_EQ(v->id, access.getVertex().lock()->id);

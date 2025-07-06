@@ -32,8 +32,8 @@ namespace EN
         case PrimitiveType::INT:
             stringValue = "int";
             break;
-        case PrimitiveType::UIT8:
-            stringValue = "uit8";
+        case PrimitiveType::UINT8:
+            stringValue = "uint8";
             break;
         case PrimitiveType::UINT16:
             stringValue = "uint16";

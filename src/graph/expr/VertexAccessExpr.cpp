@@ -2,10 +2,11 @@
 
 #include "ExprVisitor.h"
 #include "SemanticException.h"
+#include "ENScope.h"
+
 namespace EN
 {
-    VertexAccessExpr::VertexAccessExpr(string id) : id{id} {}
-    VertexAccessExpr::VertexAccessExpr(string id, weak_ptr<Scope> scope) : id{id}, scope{scope} {}
+    VertexAccessExpr::VertexAccessExpr(string id, Scope& scope) : id{id}, scope{scope} {}
     VertexAccessExpr::~VertexAccessExpr() {}
     void VertexAccessExpr::accept(ExprVisitor &visit) const
     {
@@ -27,10 +28,6 @@ namespace EN
 
     void VertexAccessExpr::resolve()
     {
-        if (scope.expired())
-        {
-            throw SemanticException("Vertex " + id + " can't be resolved automatically without knowing enclosing scope!");
-        }
-        this->vertex = scope.lock()->getVertex(id);
+        this->vertex = scope.getVertex(id);
     }
 }

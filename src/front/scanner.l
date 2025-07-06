@@ -7,6 +7,7 @@
 	#include "interpreter.h"
 	#include "parser.hpp"
 	#include "location.hh"
+	#include "PrimitiveType.h"
 
 	using namespace std;
     using namespace Gnocchi;
@@ -67,15 +68,15 @@ head {
 }
 
 public {
-	return Gnocchi::Parser::make_PUBLIC(getLoc());
+	return Gnocchi::Parser::make_PUBLIC(EN::Visibility::PUBLIC, getLoc());
 }
 
 private {
-	return Gnocchi::Parser::make_PRIVATE(getLoc());
+	return Gnocchi::Parser::make_PRIVATE(EN::Visibility::PRIVATE, getLoc());
 }
 
 declare {
-	return Gnocchi::Parser::make_DECLARE(getLoc());
+	return Gnocchi::Parser::make_DECLARE(EN::Visibility::DEFAULT, getLoc());
 }
 
 is {
@@ -135,64 +136,63 @@ holon {
 }
 
 int {
-	return Gnocchi::Parser::make_INT(getLoc());
+	return Gnocchi::Parser::make_INT(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::INT), getLoc());
 }
 
 int8 {
-	return Gnocchi::Parser::make_INT8(getLoc());
+	return Gnocchi::Parser::make_INT8(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::INT8), getLoc());
 }
 
 int16 {
-	return Gnocchi::Parser::make_INT16(getLoc());
+	return Gnocchi::Parser::make_INT16(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::INT16), getLoc());
 }
 
 int24 {
-	return Gnocchi::Parser::make_INT24(getLoc());
+	return Gnocchi::Parser::make_INT24(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::INT24), getLoc());
 }
 
 int32 {
-	return Gnocchi::Parser::make_INT32(getLoc());
+	return Gnocchi::Parser::make_INT32(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::INT32), getLoc());
 }
 
 uint {
-	return Gnocchi::Parser::make_UINT(getLoc());
+	return Gnocchi::Parser::make_UINT(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::UINT), getLoc());
 }
 
 uint8 {
-	return Gnocchi::Parser::make_UINT8(getLoc());
+	return Gnocchi::Parser::make_UINT8(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::UINT8), getLoc());
 }
 
 uint16 {
-	return Gnocchi::Parser::make_UINT16(getLoc());
+	return Gnocchi::Parser::make_UINT16(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::UINT16), getLoc());
 }
 
 uint24 {
-	return Gnocchi::Parser::make_UINT24(getLoc());
+	return Gnocchi::Parser::make_UINT24(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::UINT24), getLoc());
 }
 
 uint32 {
-	return Gnocchi::Parser::make_UINT32(getLoc());
+	return Gnocchi::Parser::make_UINT32(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::UINT32), getLoc());
 }
 
 float {
-	return Gnocchi::Parser::make_FLOAT(getLoc());
+	return Gnocchi::Parser::make_FLOAT(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::FLOAT), getLoc());
 }
 
-
 double {
-	return Gnocchi::Parser::make_DOUBLE(getLoc());
+	return Gnocchi::Parser::make_DOUBLE(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::DOUBLE), getLoc());
 }
 
 number {
-	return Gnocchi::Parser::make_NUMBER(getLoc());
+	return Gnocchi::Parser::make_NUMBER(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::NUMBER), getLoc());
 }
 
 bool {
-	return Gnocchi::Parser::make_BOOL(getLoc());
+	return Gnocchi::Parser::make_BOOL(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::BOOL), getLoc());
 }
 
 char {
-	return Gnocchi::Parser::make_CHAR(getLoc());
+	return Gnocchi::Parser::make_CHAR(EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::CHAR), getLoc());
 }
 
 ref {
@@ -261,147 +261,147 @@ as {
 }
 
 "<*>" {
-	return Gnocchi::Parser::make_HOLON_BINARY_OP(getLoc());
+	return Gnocchi::Parser::make_HOLON_BINARY_OP(EN::Operator::BINARY_HOLON_OP, getLoc());
 }
 
 "*>" {
-	return Gnocchi::Parser::make_HOLON_UNARY_LEFT_OP(getLoc());
+	return Gnocchi::Parser::make_HOLON_UNARY_LEFT_OP(EN::Operator::UNARY_LEFT_HOLON_OP, getLoc());
 }
 
 "<*" {
-	return Gnocchi::Parser::make_HOLON_UNARY_RIGHT_OP(getLoc());
+	return Gnocchi::Parser::make_HOLON_UNARY_RIGHT_OP(EN::Operator::UNARY_RIGHT_HOLON_OP, getLoc());
 }
 
 ":=" {
-	return Gnocchi::Parser::make_ASSIGN(getLoc());
+	return Gnocchi::Parser::make_ASSIGN(EN::Operator::ASSIGN, getLoc());
 }
 
 "+=" {
-	return Gnocchi::Parser::make_ASSIGN_PLUS(getLoc());
+	return Gnocchi::Parser::make_ASSIGN_PLUS(EN::Operator::ASSIGN_PLUS, getLoc());
 }
 
 "-=" {
-	return Gnocchi::Parser::make_ASSIGN_MINUS(getLoc());
+	return Gnocchi::Parser::make_ASSIGN_MINUS(EN::Operator::ASSIGN_MINUS, getLoc());
 }
 
 "*=" {
-	return Gnocchi::Parser::make_ASSIGN_MUL(getLoc());
+	return Gnocchi::Parser::make_ASSIGN_MUL(EN::Operator::ASSIGN_MUL, getLoc());
 }
 
 "/=" {
-	return Gnocchi::Parser::make_ASSIGN_DIV(getLoc());
+	return Gnocchi::Parser::make_ASSIGN_DIV(EN::Operator::ASSIGN_DIV, getLoc());
 }
 
 "%=" {
-	return Gnocchi::Parser::make_ASSIGN_MOD(getLoc());
+	return Gnocchi::Parser::make_ASSIGN_MOD(EN::Operator::ASSIGN_MOD, getLoc());
 }
 
 "&=" {
-	return Gnocchi::Parser::make_ASSIGN_AND(getLoc());
+	return Gnocchi::Parser::make_ASSIGN_AND(EN::Operator::ASSIGN_AND, getLoc());
 }
 
 "|=" {
-	return Gnocchi::Parser::make_ASSIGN_OR(getLoc());
+	return Gnocchi::Parser::make_ASSIGN_OR(EN::Operator::ASSIGN_OR, getLoc());
 }
 
 "^=" {
-	return Gnocchi::Parser::make_ASSIGN_XOR(getLoc());
+	return Gnocchi::Parser::make_ASSIGN_XOR(EN::Operator::ASSIGN_XOR, getLoc());
 }
 
 "||" {
-	return Gnocchi::Parser::make_LOGIC_OR(getLoc());
+	return Gnocchi::Parser::make_LOGIC_OR(EN::Operator::LOGIC_OR, getLoc());
 }
 
 "^^" {
-	return Gnocchi::Parser::make_LOGIC_XOR(getLoc());
+	return Gnocchi::Parser::make_LOGIC_XOR(EN::Operator::LOGIC_XOR, getLoc());
 }
 
 "&&" {
-	return Gnocchi::Parser::make_LOGIC_AND(getLoc());
+	return Gnocchi::Parser::make_LOGIC_AND(EN::Operator::LOGIC_AND, getLoc());
 }
 
 "|" {
-	return Gnocchi::Parser::make_BINARY_OR(getLoc());
+	return Gnocchi::Parser::make_BINARY_OR(EN::Operator::BINARY_OR, getLoc());
 }
 
 "^" {
-	return Gnocchi::Parser::make_BINARY_XOR(getLoc());
+	return Gnocchi::Parser::make_BINARY_XOR(EN::Operator::BINARY_XOR, getLoc());
 }
 
 "&" {
-	return Gnocchi::Parser::make_BINARY_AND(getLoc());
+	return Gnocchi::Parser::make_BINARY_AND(EN::Operator::BINARY_AND, getLoc());
 }
 
 "==" {
-	return Gnocchi::Parser::make_EQ(getLoc());
+	return Gnocchi::Parser::make_EQ(EN::Operator::EQ, getLoc());
 }
 
 "!=" {
-	return Gnocchi::Parser::make_NE(getLoc());
+	return Gnocchi::Parser::make_NE(EN::Operator::NE, getLoc());
 }
 
 "<" {
-	return Gnocchi::Parser::make_LT(getLoc());
+	return Gnocchi::Parser::make_LT(EN::Operator::LT, getLoc());
 }
 
 "<=" {
-	return Gnocchi::Parser::make_LE(getLoc());
+	return Gnocchi::Parser::make_LE(EN::Operator::LE, getLoc());
 }
 
 ">" {
-	return Gnocchi::Parser::make_GT(getLoc());
+	return Gnocchi::Parser::make_GT(EN::Operator::GT, getLoc());
 }
 
 ">=" {
-	return Gnocchi::Parser::make_GE(getLoc());
+	return Gnocchi::Parser::make_GE(EN::Operator::GE, getLoc());
 }
 
 "<<" {
-	return Gnocchi::Parser::make_SHIFT_LEFT(getLoc());
+	return Gnocchi::Parser::make_SHIFT_LEFT(EN::Operator::SHIFT_LEFT, getLoc());
 }
 
 ">>" {
-	return Gnocchi::Parser::make_SHIFT_RIGHT(getLoc());
+	return Gnocchi::Parser::make_SHIFT_RIGHT(EN::Operator::SHIFT_RIGHT, getLoc());
 }
 
 "+" {
-	return Gnocchi::Parser::make_PLUS(getLoc());
+	return Gnocchi::Parser::make_PLUS(EN::Operator::PLUS, getLoc());
 }
 
 "-" {
-	return Gnocchi::Parser::make_MINUS(getLoc());
+	return Gnocchi::Parser::make_MINUS(EN::Operator::MINUS, getLoc());
 }
 
 "*" {
-	return Gnocchi::Parser::make_MUL(getLoc());
+	return Gnocchi::Parser::make_MUL(EN::Operator::MUL, getLoc());
 }
 
 "/" {
-	return Gnocchi::Parser::make_DIV(getLoc());
+	return Gnocchi::Parser::make_DIV(EN::Operator::DIV, getLoc());
 }
 
 "%" {
-	return Gnocchi::Parser::make_MOD(getLoc());
+	return Gnocchi::Parser::make_MOD(EN::Operator::MOD, getLoc());
 }
 
 "!" {
-	return Gnocchi::Parser::make_LOGIC_NOT(getLoc());
+	return Gnocchi::Parser::make_LOGIC_NOT(EN::Operator::LOGIC_NOT, getLoc());
 }
 
 "~" {
-	return Gnocchi::Parser::make_BINARY_NOT(getLoc());
+	return Gnocchi::Parser::make_BINARY_NOT(EN::Operator::BINARY_NOT, getLoc());
 }
 
 "++" {
-	return Gnocchi::Parser::make_INC(getLoc());
+	return Gnocchi::Parser::make_INC(EN::Operator::INC, getLoc());
 }
 
 "--" {
-	return Gnocchi::Parser::make_DEC(getLoc());
+	return Gnocchi::Parser::make_DEC(EN::Operator::DEC, getLoc());
 }
 
 "." {
-	return Gnocchi::Parser::make_DOT(getLoc());
+	return Gnocchi::Parser::make_DOT(EN::Operator::LE, getLoc());
 }
 
 

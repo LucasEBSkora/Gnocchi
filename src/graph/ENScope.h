@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "ENVertex.h"
+#include "ENTypeManager.h"
 
 namespace EN
 {
@@ -21,6 +22,7 @@ namespace EN
         const shared_ptr<Vertex> getVertex(string id) const;
         const vector<shared_ptr<Edge>> getEdges() const;
 
+        TypeManager typeManager;
     private:
         vector<shared_ptr<Vertex>> vertices;
         map<string, shared_ptr<Vertex>> namedVertices;

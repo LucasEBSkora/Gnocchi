@@ -20,7 +20,7 @@ enum Primitive {
   INT24
   INT32
   INT
-  UIT8
+  UINT8
   UINT16
   UINT24
   UINT32

@@ -15,4 +15,13 @@ namespace EN
     {
     }
 
+    bool ArrayType::operator==(const Type& other) const {
+        try {
+            const ArrayType& otherArray = dynamic_cast<const ArrayType&>(other);
+            return (*otherArray.baseType.lock() == *baseType.lock()) && (otherArray.dimensions.size() == dimensions.size());
+        } catch (bad_cast) {
+            return false;
+        }
+        
+    }
 }

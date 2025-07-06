@@ -85,8 +85,12 @@ namespace EN
     {
         switch (op)
         {
-        case Operator::HOLON_OP:
-            return "<>";
+        case Operator::BINARY_HOLON_OP:
+            return "<*>";
+        case Operator::UNARY_LEFT_HOLON_OP:
+            return "*>";
+        case Operator::UNARY_RIGHT_HOLON_OP:
+            return "<*";
         case Operator::ASSIGN:
             return ":=";
         case Operator::ASSIGN_PLUS:

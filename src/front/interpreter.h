@@ -30,36 +30,37 @@
 
 #include <vector>
 
-#include "scanner.h"
 #include "LocationProvider.h"
+#include "scanner.h"
 
 #include "parser.hpp"
 
 #include "ENGraph.h"
 
-namespace Gnocchi
-{
-  using namespace std;
-  class Interpreter
-  {
-  public:
-    Interpreter(string fileName);
+#include "VertexBuilder.h"
 
-    int parse();
+namespace Gnocchi {
+using namespace std;
+class Interpreter {
+public:
+  Interpreter(string fileName);
 
-    void clear();
+  int parse();
 
-    void switchInputStream(istream *is);
+  void clear();
 
-    friend class Parser;
-    
-    friend class Scanner;
+  void switchInputStream(istream *is);
 
-  private:
-    LocationProvider locationProvider;
-    Scanner m_scanner;
-    Parser m_parser;
-    EN::Graph graph; 
-  };
+  friend class Parser;
 
-}
+  friend class Scanner;
+
+private:
+  LocationProvider locationProvider;
+  Scanner m_scanner;
+  Parser m_parser;
+  EN::Graph graph;
+  EN::VertexBuilder vertexBuilder;
+};
+
+} // namespace Gnocchi

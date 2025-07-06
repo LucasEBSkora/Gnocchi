@@ -31,7 +31,7 @@ namespace EN
       {PrimitiveType::INT24, "int24", "testINT24ToString"},
       {PrimitiveType::INT32, "int32", "testINT32ToString"},
       {PrimitiveType::INT, "int", "testINTToString"},
-      {PrimitiveType::UIT8, "uit8", "testUIT8ToString"},
+      {PrimitiveType::UINT8, "uint8", "testUINT8ToString"},
       {PrimitiveType::UINT16, "uint16", "testUINT16ToString"},
       {PrimitiveType::UINT24, "uint24", "testUINT24ToString"},
       {PrimitiveType::UINT32, "uint32", "testUINT32ToString"},

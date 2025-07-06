@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "ENExprs.h"
+#include "ENScope.h"
 
 namespace EN
 {
@@ -11,7 +11,8 @@ namespace EN
     class UnaryExprToStringTest : public testing::Test, public testing::WithParamInterface<TestParam>
     {
     public:
-        shared_ptr<Expr> a = make_shared<VertexAccessExpr>("a");
+        Scope scope;
+        shared_ptr<Expr> a = make_shared<VertexAccessExpr>("a", scope);
 
         void testUnaryToString(Operator var, UnaryExpr::Direction dir, const char *expected)
         {
@@ -35,8 +36,8 @@ namespace EN
         {Operator::INC, UnaryExpr::Direction::RIGHT, "a++", "testIncRightToString"},
         {Operator::DEC, UnaryExpr::Direction::LEFT, "--a", "testDecLeftToString"},
         {Operator::DEC, UnaryExpr::Direction::RIGHT, "a--", "testDecRightToString"},
-        {Operator::HOLON_OP, UnaryExpr::Direction::LEFT, "<>a", "testHolonOpLeftToString"},
-        {Operator::HOLON_OP, UnaryExpr::Direction::RIGHT, "a<>", "testHolonOpRightToString"},
+        {Operator::UNARY_LEFT_HOLON_OP, UnaryExpr::Direction::LEFT, "*>a", "testHolonOpLeftToString"},
+        {Operator::UNARY_RIGHT_HOLON_OP, UnaryExpr::Direction::RIGHT, "a<*", "testHolonOpRightToString"},
     };
 
     INSTANTIATE_TEST_SUITE_P(UnaryToStringTest, UnaryExprToStringTest,

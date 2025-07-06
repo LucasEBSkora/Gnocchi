@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "ENExprs.h"
+#include "ENScope.h"
 
 namespace EN
 {
@@ -11,8 +12,9 @@ namespace EN
     class BinaryExprToStringTest : public testing::Test, public testing::WithParamInterface<TestParam>
     {
     public:
-        shared_ptr<Expr> a = make_shared<VertexAccessExpr>("a");
-        shared_ptr<Expr> b = make_shared<VertexAccessExpr>("b");
+        Scope scope;
+        shared_ptr<Expr> a = make_shared<VertexAccessExpr>("a", scope);
+        shared_ptr<Expr> b = make_shared<VertexAccessExpr>("b", scope);
 
         void testBinaryToString(Operator var, const char *expected)
         {
@@ -29,7 +31,7 @@ namespace EN
     }
 
     const vector<TestParam> testTuples{
-        {Operator::HOLON_OP, "a <> b", "testHolonOpToString"},
+        {Operator::BINARY_HOLON_OP, "a <*> b", "testHolonOpToString"},
         {Operator::ASSIGN, "a := b", "testAssignToString"},
         {Operator::ASSIGN_PLUS, "a += b", "testAssignPlusToString"},
         {Operator::ASSIGN_MINUS, "a -= b", "testAssignMinusToString"},
