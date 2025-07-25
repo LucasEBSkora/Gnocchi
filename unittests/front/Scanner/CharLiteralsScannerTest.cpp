@@ -1,7 +1,5 @@
 #include "gtest/gtest.h"
 #include "scanner.h"
-#include <iostream>
-#include <utility>
 
 namespace Gnocchi
 {
