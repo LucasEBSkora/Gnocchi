@@ -2,20 +2,18 @@
 
 #include "ENExpr.h"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
-namespace EN
-{
+namespace EN {
 
-    class NotifyExpr : public Expr
-    {
-    public:
-        NotifyExpr(vector<shared_ptr<Expr>> params, shared_ptr<Expr> target);
-        ~NotifyExpr();
-        virtual void accept(ExprVisitor &visit) const override;
+class NotifyExpr : public Expr {
+public:
+  NotifyExpr(vector<shared_ptr<Expr>> params, shared_ptr<Expr> target);
+  ~NotifyExpr();
+  virtual void accept(ExprVisitor &visit) const override;
 
-        vector<shared_ptr<Expr>> params;
-        shared_ptr<Expr> target;
-    };
-}
+  vector<shared_ptr<Expr>> params;
+  shared_ptr<Expr> target;
+};
+} // namespace EN

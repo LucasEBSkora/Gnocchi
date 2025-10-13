@@ -2,19 +2,12 @@
 
 #include "ExprVisitor.h"
 
-namespace EN
-{
-    NotifyExpr::NotifyExpr(vector<shared_ptr<Expr>> params, shared_ptr<Expr> target) : params{params}, target{target}
-    {
-    }
+namespace EN {
+NotifyExpr::NotifyExpr(vector<shared_ptr<Expr>> params, shared_ptr<Expr> target)
+    : params{params}, target{target} {}
 
-    NotifyExpr::~NotifyExpr()
-    {
-    }
+NotifyExpr::~NotifyExpr() {}
 
-    void NotifyExpr::accept(ExprVisitor &visit) const
-    {
-        visit.visit(*this);
-    }
+void NotifyExpr::accept(ExprVisitor &visit) const { visit.visit(*this); }
 
-}
+} // namespace EN

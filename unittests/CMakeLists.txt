@@ -27,7 +27,7 @@ include(CTest)
 ################################
 
 file(GLOB_RECURSE UNIT_TESTS_SOURCES
-	"*.cpp"	
+	"*.cpp"
 )
 
 set(CMAKE_BUILD_TYPE Debug)

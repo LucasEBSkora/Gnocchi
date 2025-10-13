@@ -1,20 +1,15 @@
 #include "ENType.h"
 
-#include "TypeVisitor.h"
 #include "TypeToStringVisitor.h"
 
-namespace EN
-{
+namespace EN {
 
-    Type::~Type()
-    {
-    }
+Type::~Type() {}
 
-    string Type::toString() const
-    {
-        TypeToStringVisitor visitor;
-        this->accept(visitor);
-        return visitor.getResult();
-    }
-
+string Type::toString() const {
+  TypeToStringVisitor visitor;
+  this->accept(visitor);
+  return visitor.getResult();
 }
+
+} // namespace EN

@@ -2,7 +2,6 @@
 
 #include "ENScope.h"
 
-namespace EN
-{
-    using Graph = Scope;
+namespace EN {
+using Graph = Scope;
 }

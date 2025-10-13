@@ -5,22 +5,16 @@
 
 #include <memory>
 
-namespace EN
-{
+namespace EN {
 
-    class UnaryExpr : public Expr
-    {
-    public:
-        enum Direction
-        {
-            LEFT,
-            RIGHT
-        };
-        UnaryExpr(Operator op, shared_ptr<Expr> operand, Direction dir);
-        ~UnaryExpr();
-        virtual void accept(ExprVisitor &visit) const override;
-        const Operator op;
-        const shared_ptr<Expr> operand;
-        const Direction dir;
-    };
-}
+class UnaryExpr : public Expr {
+public:
+  enum Direction { LEFT, RIGHT };
+  UnaryExpr(Operator op, shared_ptr<Expr> operand, Direction dir);
+  ~UnaryExpr();
+  virtual void accept(ExprVisitor &visit) const override;
+  const Operator op;
+  const shared_ptr<Expr> operand;
+  const Direction dir;
+};
+} // namespace EN

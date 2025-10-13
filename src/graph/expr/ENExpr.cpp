@@ -1,20 +1,15 @@
 #include "ENExpr.h"
 
-#include "ExprVisitor.h"
 #include "ExprToStringVisitor.h"
 
-namespace EN
-{
+namespace EN {
 
-    Expr::~Expr()
-    {
-    }
+Expr::~Expr() {}
 
-    string Expr::toString() const
-    {
-        ExprToStringVisitor visitor;
-        this->accept(visitor);
-        return visitor.getResult();
-    }
-
+string Expr::toString() const {
+  ExprToStringVisitor visitor;
+  this->accept(visitor);
+  return visitor.getResult();
 }
+
+} // namespace EN
