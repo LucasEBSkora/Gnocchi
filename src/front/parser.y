@@ -82,9 +82,9 @@
 %token ENABLES "enables";
 %token DISABLES "disables";
 
-%token READ "read";
-%token LISTEN "listen";
-%token NOTIFY "notify";
+%token <EN::AllowedOperations> READ "read";
+%token <EN::AllowedOperations> LISTEN "listen";
+%token <EN::AllowedOperations> NOTIFY "notify";
 
 %token INITIALISE "initialise"
 
@@ -206,6 +206,16 @@
 %type <std::weak_ptr<EN::Type>> scalar_primitive_type
 // %type <std::weak_ptr<EN::Type>> notification_or_field
 %type <std::shared_ptr<EN::Expr>> primary_expr
+%type <EN::NotificationParameter> notification_param
+%type <EN::AllowedOperations> operation
+%type <EN::AllowedOperations> operations
+%type <std::list<std::shared_ptr<EN::Edge>>> create_edge
+%type <std::list<std::shared_ptr<EN::Expr>>> create_edge_list
+%type <std::list<std::shared_ptr<EN::Expr>>> vertex_list
+%type <std::list<std::shared_ptr<EN::Expr>>> _vertex_list
+%type <std::shared_ptr<EN::Expr>> when_clause
+%type <std::shared_ptr<EN::Expr>> with_clause
+%type <std::pair<std::shared_ptr<EN::Expr>, std::shared_ptr<EN::Expr>>> edge_function
 
 %type <std::shared_ptr<EN::Expr>> expr
 %type <std::shared_ptr<EN::Expr>> binary_expr
@@ -226,7 +236,9 @@ statements : statement statements
            | %empty
 
 statement : definition
-          | "edge" create_edge ";"
+          | "edge" create_edge ";" {
+            for (auto edge : $2) driver.graph.addEdge(edge);
+          }
           | expr ";"
           | notify ";"
             
@@ -238,7 +250,9 @@ vertex_definition : definition_header "vertex"
                         driver.vertexBuilder.setVisibility($1.first); 
                         driver.vertexBuilder.setId($1.second);
                     }
-                    vertex_type notification_params vertex_body ";"
+                    vertex_type notification_params vertex_body ";" {
+                        graph.addVertex(driver.vertexBuilder.build());
+                    }
 
 definition_header : visibility { $$ = {$1, ""};} 
                   | visibility name "is" { $$ = {$1, $2};} 
@@ -249,45 +263,73 @@ visibility : "public" | "private" | "declare"
 
 vertex_type : primitive_type {driver.vertexBuilder.setType($1);} | %empty
 
-notification_params : %empty | "(" notification_param param_list ")"
+notification_params : %empty | "(" notification_param param_list ")" {
+                        driver.vertexBuilder.addNotificationParameter($2);
+                    }
 
-param_list : "," notification_param param_list | %empty
+param_list : "," notification_param param_list {
+            driver.vertexBuilder.addNotificationParameter($2);
+} | %empty
 
-notification_param : IDENTIFIER "is" primitive_type |
-                     IDENTIFIER "is" primitive_type "default" expr
+notification_param : IDENTIFIER "is" primitive_type {
+                        $$ = EN::NotificationParameter($1, $3);
+                    } | IDENTIFIER "is" primitive_type "default" expr {
+                        $$ = EN::NotificationParameter($1, $3, $5);
+                    }
 
 vertex_body : "," vertex_body_part vertex_body | %empty
 
-vertex_body_part : vertex_state | create_edge | enabled_ops | initial_value | interfaces
+vertex_body_part : vertex_state | enabled_ops | initial_value | interfaces | default_edge | create_edge {
+            for (auto edge : $1) driver.graph.addEdge(edge);
+          }
 
-vertex_state : "state" expr | "state" "bound" expr
+vertex_state : "state" expr {
+    driver.vertexBuilder.setStateExpr($2).setBoundState(false);
+} | "state" "bound" expr {
+    driver.vertexBuilder.setStateExpr($3).setBoundState(true);
+}
 
-enabled_ops : "enables" operations | "disables" operations
+enabled_ops : "enables" operations {
+    driver.vertexBuilder.setEnabledOperations($2);
+} | "disables" operations {
+    driver.vertexBuilder.setDisabledOperations($2);
+}
 
-operations : operation operations | %empty
+operations : operation operations {
+    $$ = static_cast<EN::AllowedOperations>($1 | $2);
+} | %empty {
+    $$ = EN::AllowedOperations::NONE;
+}
 
 operation : "read" | "notify" | "listen"
 
-initial_value : "initialise" expr
+initial_value : "initialise" expr {
+    driver.vertexBuilder.setInitialValue($2);
+}
 
 interfaces: "implements" interface_list
 
 interface_list : IDENTIFIER | IDENTIFIER interfaces
 
-create_edge : create_edge_list "->" edge_destination edge_function
+default_edge : "default" edge_function {
+                driver.vertexBuilder.setDefaultWhen($2.first);
+                driver.vertexBuilder.setDefaultWith($2.second);
+            }
 
-edge_destination : "default" | create_edge_list
+create_edge : create_edge_list "->" create_edge_list edge_function {
+    $$ = EN::Edge::createMultipleEdges($1, $3, $4.first, $4.second);
+}
 
-create_edge_list : access | "[" vertex_list "]"
+create_edge_list : access { $$ = {$1}; } | "[" vertex_list "]" { $$ = $2; }
 
-vertex_list : access _vertex_list
+vertex_list : access _vertex_list { $2.push_front($1); $$ = $2; }
 
-_vertex_list : %empty | "," access _vertex_list
+_vertex_list : %empty { $$ = {}; } | "," access _vertex_list { $3.push_front($2); $$ = $3; }
 
-edge_function : when_clause with_clause
+edge_function : when_clause with_clause { $$ = {$1, $2}; }
 
-when_clause : %empty | "when" expr
-with_clause : %empty | "with" expr 
+when_clause : %empty { $$ = nullptr; } | "when" expr { $$ = $2; }
+with_clause : %empty { $$ = nullptr; } | "with" expr { $$ = $2; }
 
 primitive_type : scalar_primitive_type | primitive_type "[" expr "]" {
     auto type = graph.typeManager.addArrayType($1, {$3});

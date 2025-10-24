@@ -1,5 +1,5 @@
 #include "VertexBuilder.h"
-#include "ENTypes.h"
+#include "ENVertex.h"
 #include "LiteralExpr.h"
 #include "gtest/gtest.h"
 
@@ -52,8 +52,7 @@ public:
   }
 
   void testAddNotificationparameter() {
-    obj->addNotificationParameter(
-        {"first", PrimitiveType::getPrimitiveType(PrimitiveType::INT8)});
+    obj->addNotificationParameter({"first", PrimitiveType::getPrimitiveType(PrimitiveType::INT8)});
     shared_ptr<Vertex> v = obj->build();
     ASSERT_EQ(1, v->notificationParameters.size());
     ASSERT_EQ("first", v->notificationParameters[0].name);
@@ -89,25 +88,27 @@ public:
   }
 
   void testDisableAllOperations() {
-    obj->disableAllOperations();
+    obj->setDisabledOperations(AllowedOperations::ALL);
     shared_ptr<Vertex> v = obj->build();
     ASSERT_EQ(AllowedOperations::NONE, v->allowedOperations);
   }
 
   void testEnableAllOperations() {
-    obj->enableAllOperations();
+    obj->setEnabledOperations(AllowedOperations::ALL);
     shared_ptr<Vertex> v = obj->build();
     ASSERT_EQ(AllowedOperations::ALL, v->allowedOperations);
   }
 
-  void testToggleOperationEnabled() {
-    obj->enableAllOperations().toggleOperationEnabled(AllowedOperations::READ);
-    ASSERT_EQ(int(AllowedOperations::WRITE) | int(AllowedOperations::NOTIFY),
-              obj->build()->allowedOperations);
+  void testEnableOneOperation() {
+    obj->setEnabledOperations(AllowedOperations::NOTIFY);
+    shared_ptr<Vertex> v = obj->build();
+    ASSERT_EQ(AllowedOperations::NOTIFY, v->allowedOperations);
+  }
 
-    obj->disableAllOperations().toggleOperationEnabled(
-        AllowedOperations::NOTIFY);
-    ASSERT_EQ(AllowedOperations::NOTIFY, obj->build()->allowedOperations);
+  void testDisableOneOperation() {
+    obj->setDisabledOperations(AllowedOperations::READ);
+    shared_ptr<Vertex> v = obj->build();
+    ASSERT_EQ(AllowedOperations::LISTEN | AllowedOperations::NOTIFY, v->allowedOperations);
   }
 
   void testSetDefaultWhen() {
@@ -127,16 +128,15 @@ public:
   }
 
   void testAddBodyEdge() {
-    obj->addBodyEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(),
-                                       shared_ptr<Expr>(),
-                                       make_shared<LiteralExpr>(10)));
+    obj->addBodyEdge(
+        make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), make_shared<LiteralExpr>(10)));
     shared_ptr<Vertex> v = obj->build();
     ASSERT_EQ(1, v->getEdges().size());
     ASSERT_EQ("10", v->getEdges()[0]->with->toString());
   }
 };
 
-#define VERTEX_BUILDER_TEST(METHOD)                                            \
+#define VERTEX_BUILDER_TEST(METHOD)                                                                                    \
   TEST_F(VertexBuilderTest, METHOD) { this->METHOD(); }
 
 VERTEX_BUILDER_TEST(testBuildEmpty)
@@ -150,7 +150,8 @@ VERTEX_BUILDER_TEST(testAddInterface)
 VERTEX_BUILDER_TEST(testSetInitialValue)
 VERTEX_BUILDER_TEST(testDisableAllOperations)
 VERTEX_BUILDER_TEST(testEnableAllOperations)
-VERTEX_BUILDER_TEST(testToggleOperationEnabled)
+VERTEX_BUILDER_TEST(testEnableOneOperation)
+VERTEX_BUILDER_TEST(testDisableOneOperation)
 VERTEX_BUILDER_TEST(testSetDefaultWhen)
 VERTEX_BUILDER_TEST(testSetDefaultWith)
 VERTEX_BUILDER_TEST(testAddBodyEdge)

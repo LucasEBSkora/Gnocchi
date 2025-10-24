@@ -116,15 +116,15 @@ disables {
 }
 
 notify {
-	return Gnocchi::Parser::make_NOTIFY(getLoc());
+	return Gnocchi::Parser::make_NOTIFY(EN::AllowedOperations::NOTIFY, getLoc());
 }
 
 read {
-	return Gnocchi::Parser::make_READ(getLoc());
+	return Gnocchi::Parser::make_READ(EN::AllowedOperations::READ,getLoc());
 }
 
 listen {
-	return Gnocchi::Parser::make_LISTEN(getLoc());
+	return Gnocchi::Parser::make_LISTEN(EN::AllowedOperations::LISTEN,getLoc());
 }
 
 initialise {
