@@ -1,15 +1,14 @@
 #include "gtest/gtest.h"
 
-#include "ENExprs.h"
+#include "BinaryExpr.h"
 #include "ENScope.h"
-
+#include "VertexAccessExpr.h"
 namespace EN {
 using namespace std;
 
 using TestParam = tuple<Operator, const char *, const char *>;
 
-class BinaryExprToStringTest : public testing::Test,
-                               public testing::WithParamInterface<TestParam> {
+class BinaryExprToStringTest : public testing::Test, public testing::WithParamInterface<TestParam> {
 public:
   Scope scope;
   shared_ptr<Expr> a = make_shared<VertexAccessExpr>("a", scope);
@@ -59,9 +58,6 @@ const vector<TestParam> testTuples{
     {Operator::MOD, "a % b", "testModToString"},
 };
 
-INSTANTIATE_TEST_SUITE_P(BinaryToStringTest, BinaryExprToStringTest,
-                         testing::ValuesIn(testTuples),
-                         [](const testing::TestParamInfo<TestParam> &info) {
-                           return std::get<2>(info.param);
-                         });
+INSTANTIATE_TEST_SUITE_P(BinaryToStringTest, BinaryExprToStringTest, testing::ValuesIn(testTuples),
+                         [](const testing::TestParamInfo<TestParam> &info) { return std::get<2>(info.param); });
 } // namespace EN

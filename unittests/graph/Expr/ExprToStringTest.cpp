@@ -1,7 +1,9 @@
 #include "gtest/gtest.h"
 
-#include "ENExprs.h"
 #include "ENScope.h"
+#include "LiteralExpr.h"
+#include "NotifyExpr.h"
+#include "VertexAccessExpr.h"
 
 namespace EN {
 using namespace std;
@@ -19,16 +21,13 @@ public:
   }
 
   void notifyTest() {
-    shared_ptr<VertexAccessExpr> access =
-        make_shared<VertexAccessExpr>("this", *scope);
-    NotifyExpr expr{
-        {make_shared<LiteralExpr>(10), make_shared<LiteralExpr>("hello")},
-        access};
+    shared_ptr<VertexAccessExpr> access = make_shared<VertexAccessExpr>("this", *scope);
+    NotifyExpr expr{{make_shared<LiteralExpr>(10), make_shared<LiteralExpr>("hello")}, access};
     ASSERT_EQ("( 10 \"hello\" ) -> this", expr.toString());
   }
 };
 
-#define EXPR_TO_STRING_TEST(METHOD)                                            \
+#define EXPR_TO_STRING_TEST(METHOD)                                                                                    \
   TEST_F(ExprToStringTest, METHOD) { this->METHOD(); }
 
 EXPR_TO_STRING_TEST(vertexAccessTest)

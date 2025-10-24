@@ -17,7 +17,11 @@
     #include <fstream>
 
     #include "ENGraph.h"
-    #include "ENExprs.h"
+    #include "BinaryExpr.h"
+    #include "LiteralExpr.h"
+    #include "NotifyExpr.h"
+    #include "UnaryExpr.h"
+    #include "VertexAccessExpr.h"
     #include "ENOperators.h"
 
     using namespace std;
@@ -267,9 +271,7 @@ notification_params : %empty | "(" notification_param param_list ")" {
                         driver.vertexBuilder.addNotificationParameter($2);
                     }
 
-param_list : "," notification_param param_list {
-            driver.vertexBuilder.addNotificationParameter($2);
-} | %empty
+param_list : "," notification_param param_list { driver.vertexBuilder.addNotificationParameter($2); } | %empty
 
 notification_param : IDENTIFIER "is" primitive_type {
                         $$ = EN::NotificationParameter($1, $3);
@@ -341,7 +343,7 @@ scalar_primitive_type : "int8" | "int16" | "int24" | "int32" | "int" | "uint8"
 
 expr : binary_expr
 
-binary_expr : unary_left binary_op unary_left {
+binary_expr : unary_left | unary_left binary_op binary_expr {
     $$ = std::make_shared<EN::BinaryExpr>($1, $2, $3);
 }
 
@@ -371,9 +373,12 @@ unary_right : access
 
 unary_right_op : "++" | "--"
 
-access : primary_expr /* notification_or_field
+access : primary_expr {
+    cout << "access" << $1->toString() << endl;
+    $$ = $1;
+}
 
-notification_or_field : %empty
+/* notification_or_field : %empty
                       | "(" ")" notification_or_field
                       | "(" expr_list ")" notification_or_field
                       | "[" expr "]" notification_or_field */
@@ -382,7 +387,7 @@ expr_list :  expr _expr_list
 _expr_list : %empty | "," expr _expr_list
 
 primary_expr : SIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
-             | UNSIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
+             | UNSIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1); cout << $1 << endl;}
              | BOOL_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
              | CHAR_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
              | STRING_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}

@@ -1,14 +1,13 @@
 #include "gtest/gtest.h"
 
-#include "ENExprs.h"
+#include "LiteralExpr.h"
 
 namespace EN {
 using namespace std;
 
 using TestParam = tuple<EN::LiteralVariant, const char *, const char *>;
 
-class LiteralToStringTest : public testing::Test,
-                            public testing::WithParamInterface<TestParam> {
+class LiteralToStringTest : public testing::Test, public testing::WithParamInterface<TestParam> {
 public:
   void testLiteralToString(LiteralVariant var, const char *expected) {
     const unique_ptr<Expr> expr = make_unique<LiteralExpr>(var);
@@ -32,9 +31,6 @@ const vector<TestParam> testTuples{
     {false, "false", "testFalseToString"},
 };
 
-INSTANTIATE_TEST_SUITE_P(testLiteralToString, LiteralToStringTest,
-                         testing::ValuesIn(testTuples),
-                         [](const testing::TestParamInfo<TestParam> &info) {
-                           return std::get<2>(info.param);
-                         });
+INSTANTIATE_TEST_SUITE_P(testLiteralToString, LiteralToStringTest, testing::ValuesIn(testTuples),
+                         [](const testing::TestParamInfo<TestParam> &info) { return std::get<2>(info.param); });
 } // namespace EN

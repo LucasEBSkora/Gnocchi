@@ -14,7 +14,8 @@ public:
   string name;
   weak_ptr<Type> type;
   optional<weak_ptr<Expr>> defaultValue;
-  NotificationParameter(const string name, weak_ptr<Type> type, weak_ptr<Expr> defaultValue = {});
+  NotificationParameter(const string name, weak_ptr<Type> type, weak_ptr<Expr> defaultValue);
+  NotificationParameter(const string name, weak_ptr<Type> type);
   NotificationParameter();
 };
 } // namespace EN

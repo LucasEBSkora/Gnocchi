@@ -9,8 +9,7 @@ int main(int argc, char **argv) {
 
   if (argc != 2) {
     cerr << "Usage: Gnocchi <in-file> \n"
-         << "where in-file is the source file to compile"
-         << endl;
+         << "where in-file is the source file to compile" << endl;
     return -1;
   }
 

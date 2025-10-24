@@ -1,6 +1,7 @@
 #include "VertexBuilder.h"
 #include "ENVertex.h"
 #include "LiteralExpr.h"
+#include "PrimitiveType.h"
 #include "gtest/gtest.h"
 
 namespace EN {

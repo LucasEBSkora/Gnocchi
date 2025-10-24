@@ -21,6 +21,8 @@ public:
 
   void switchInputStream(istream *is);
 
+  EN::Graph &getGraph();
+
   friend class Parser;
 
   friend class Scanner;
