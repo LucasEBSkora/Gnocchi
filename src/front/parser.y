@@ -374,7 +374,6 @@ unary_right : access
 unary_right_op : "++" | "--"
 
 access : primary_expr {
-    cout << "access" << $1->toString() << endl;
     $$ = $1;
 }
 
@@ -387,7 +386,7 @@ expr_list :  expr _expr_list
 _expr_list : %empty | "," expr _expr_list
 
 primary_expr : SIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
-             | UNSIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1); cout << $1 << endl;}
+             | UNSIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1); }
              | BOOL_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
              | CHAR_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
              | STRING_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}

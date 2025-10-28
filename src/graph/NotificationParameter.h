@@ -13,8 +13,8 @@ class NotificationParameter {
 public:
   string name;
   weak_ptr<Type> type;
-  optional<weak_ptr<Expr>> defaultValue;
-  NotificationParameter(const string name, weak_ptr<Type> type, weak_ptr<Expr> defaultValue);
+  optional<shared_ptr<Expr>> defaultValue;
+  NotificationParameter(const string name, weak_ptr<Type> type, shared_ptr<Expr> defaultValue);
   NotificationParameter(const string name, weak_ptr<Type> type);
   NotificationParameter();
 };

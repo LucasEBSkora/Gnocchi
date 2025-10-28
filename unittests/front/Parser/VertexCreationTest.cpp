@@ -87,9 +87,19 @@ public:
     ASSERT_EQ("p1", param.name);
     ASSERT_EQ(*EN::PrimitiveType::getPrimitiveType(EN::PrimitiveType::INT32).lock(), *param.type.lock());
     ASSERT_TRUE(param.defaultValue.has_value());
-    shared_ptr<EN::LiteralExpr> expr = dynamic_pointer_cast<EN::LiteralExpr>(param.defaultValue.value().lock());
+    shared_ptr<EN::LiteralExpr> expr = dynamic_pointer_cast<EN::LiteralExpr>(param.defaultValue.value());
     ASSERT_NE(nullptr, expr);
-    ASSERT_EQ(10, expr->getInt());
+    ASSERT_EQ(EN::LiteralExpr::UINT, expr->getLiteralType());
+    ASSERT_EQ(5, expr->getUint());
+  }
+
+  void testCreateMultipleNotificationParameters() {
+    input << "declare vertex (p1 is int32, p2 is bool, p3 is int8 default 9);";
+    ASSERT_EQ(0, obj->parse());
+    EN::Graph &g = obj->getGraph();
+    ASSERT_EQ(1, g.getVertices().size());
+    shared_ptr<EN::Vertex> v = g.getVertices().front();
+    ASSERT_EQ(3, v->notificationParameters.size());
   }
 };
 
@@ -99,5 +109,6 @@ TEST_F(VertexCreationTest, testCreateNamedVertex) { this->testCreateNamedVertex(
 TEST_F(VertexCreationTest, testCreateTypedVertex) { this->testCreateTypedVertex(); }
 TEST_F(VertexCreationTest, testCreateOneNotificationParameter) { this->testCreateOneNotificationParameter(); }
 TEST_F(VertexCreationTest, testCreateDefaultNotificationParameter) { this->testCreateDefaultNotificationParameter(); }
+TEST_F(VertexCreationTest, testCreateMultipleNotificationParameters) { this->testCreateMultipleNotificationParameters(); }
 
 } // namespace Gnocchi

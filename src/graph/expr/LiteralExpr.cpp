@@ -5,11 +5,10 @@ namespace EN {
 LiteralExpr::LiteralExpr(LiteralVariant value) : value{value} {}
 LiteralExpr::~LiteralExpr() {}
 
-LiteralExpr::Literal LiteralExpr::getLiteralType() const {
-  return (LiteralExpr::Literal)value.index();
-}
+LiteralExpr::Literal LiteralExpr::getLiteralType() const { return (LiteralExpr::Literal)value.index(); }
 
 long long LiteralExpr::getInt() const { return std::get<long long>(value); }
+unsigned long long LiteralExpr::getUint() const { return std::get<unsigned long long>(value); }
 float LiteralExpr::getFloat() const { return std::get<float>(value); }
 double LiteralExpr::getDouble() const { return std::get<double>(value); }
 char LiteralExpr::getChar() const { return std::get<char>(value); }

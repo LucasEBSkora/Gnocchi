@@ -15,6 +15,9 @@ void ExprToStringVisitor::visit(const LiteralExpr &expr) {
   case LiteralExpr::INT:
     ss << expr.getInt();
     break;
+  case LiteralExpr::UINT:
+    ss << expr.getUint();
+    break;
   case LiteralExpr::FLOAT:
     ss << expr.getFloat() << 'f';
     break;
