@@ -34,8 +34,10 @@ public:
   }
 };
 
-TEST_F(ScannerTest, testCreateScanner) { this->testCreateScanner(); }
+#define SCANNER_TEST(METHOD)                                                                                           \
+  TEST_F(ScannerTest, METHOD) { this->METHOD(); }
 
-TEST_F(ScannerTest, testSwitchStream) { this->testSwitchStream(); }
+SCANNER_TEST(testCreateScanner)
+SCANNER_TEST(testSwitchStream)
 
 } // namespace Gnocchi

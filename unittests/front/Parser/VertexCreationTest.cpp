@@ -1,3 +1,4 @@
+#include "ENExpr.h"
 #include "ENGraphCommon.h"
 #include "ENVertex.h"
 #include "LiteralExpr.h"
@@ -101,14 +102,28 @@ public:
     shared_ptr<EN::Vertex> v = g.getVertices().front();
     ASSERT_EQ(3, v->notificationParameters.size());
   }
+
+  void testCreateVertexWithState() {
+    input << "declare vertex (p1 is bool), state !p1;";
+    ASSERT_EQ(0, obj->parse());
+    EN::Graph &g = obj->getGraph();
+    ASSERT_EQ(1, g.getVertices().size());
+    shared_ptr<EN::Vertex> v = g.getVertices().front();
+    shared_ptr<EN::Expr> expr = v->stateExpr;
+    ASSERT_NE(nullptr, expr);
+  }
 };
 
-TEST_F(VertexCreationTest, testCreateMinimalVertex) { this->testCreateMinimalVertex(); }
-TEST_F(VertexCreationTest, testCreatePublicVertex) { this->testCreatePublicVertex(); }
-TEST_F(VertexCreationTest, testCreateNamedVertex) { this->testCreateNamedVertex(); }
-TEST_F(VertexCreationTest, testCreateTypedVertex) { this->testCreateTypedVertex(); }
-TEST_F(VertexCreationTest, testCreateOneNotificationParameter) { this->testCreateOneNotificationParameter(); }
-TEST_F(VertexCreationTest, testCreateDefaultNotificationParameter) { this->testCreateDefaultNotificationParameter(); }
-TEST_F(VertexCreationTest, testCreateMultipleNotificationParameters) { this->testCreateMultipleNotificationParameters(); }
+#define VERTEX_CREATION_TEST(METHOD)                                                                                   \
+  TEST_F(VertexCreationTest, METHOD) { this->METHOD(); }
+
+VERTEX_CREATION_TEST(testCreateMinimalVertex)
+VERTEX_CREATION_TEST(testCreatePublicVertex)
+VERTEX_CREATION_TEST(testCreateNamedVertex)
+VERTEX_CREATION_TEST(testCreateTypedVertex)
+VERTEX_CREATION_TEST(testCreateOneNotificationParameter)
+VERTEX_CREATION_TEST(testCreateDefaultNotificationParameter)
+VERTEX_CREATION_TEST(testCreateMultipleNotificationParameters)
+VERTEX_CREATION_TEST(testCreateVertexWithState)
 
 } // namespace Gnocchi

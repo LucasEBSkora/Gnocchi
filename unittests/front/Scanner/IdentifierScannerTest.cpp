@@ -1,6 +1,5 @@
 #include "scanner.h"
 #include "gtest/gtest.h"
-#include <iostream>
 
 namespace Gnocchi {
 
@@ -26,19 +25,11 @@ public:
   }
 };
 
-TEST_F(IdentifierScannerTest, testIdentifierOnlyText) {
-  this->testIdentifyIdentifier("abaosafpasfas");
-}
+#define IDENTIFIER_SCANNER_TEST(NAME, INPUT)                                                                           \
+  TEST_F(IdentifierScannerTest, NAME) { this->testIdentifyIdentifier(INPUT); }
 
-TEST_F(IdentifierScannerTest, testIdentifierStartUnderscore) {
-  this->testIdentifyIdentifier("_padkadada");
-}
-
-TEST_F(IdentifierScannerTest, testIdentifierWithNumbers) {
-  this->testIdentifyIdentifier("_12312412412");
-}
-
-TEST_F(IdentifierScannerTest, testIdentifierComplete) {
-  this->testIdentifyIdentifier("_1jiasjfaafsokw243___");
-}
+IDENTIFIER_SCANNER_TEST(testIdentifierOnlyText, "abaosafpasfas")
+IDENTIFIER_SCANNER_TEST(testIdentifierStartUnderscore, "_padkadada")
+IDENTIFIER_SCANNER_TEST(testIdentifierWithNumbers, "_12312412412")
+IDENTIFIER_SCANNER_TEST(testIdentifierComplete, "_1jiasjfaafsokw243___")
 } // namespace Gnocchi

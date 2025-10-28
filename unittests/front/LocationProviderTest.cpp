@@ -33,7 +33,9 @@ protected:
   }
 };
 
-TEST_F(LocationProviderTest, testFilename) { this->testFilename(); }
+#define LOCATION_PROVIDER_TEST(METHOD)                                                                                 \
+  TEST_F(LocationProviderTest, METHOD) { this->METHOD(); }
 
-TEST_F(LocationProviderTest, testLocationCol) { this->testLocationCol(); }
+LOCATION_PROVIDER_TEST(testFilename)
+LOCATION_PROVIDER_TEST(testLocationCol)
 } // namespace Gnocchi

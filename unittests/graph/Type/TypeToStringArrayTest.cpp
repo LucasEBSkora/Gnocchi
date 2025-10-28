@@ -27,6 +27,10 @@ public:
   }
 };
 
-TEST_F(TypeToStringArrayTest, testOneDArrayToString) { this->testOneDArrayToString(); }
+#define TYPE_TO_STRING_ARRAY_TEST(METHOD)                                                                              \
+  TEST_F(TypeToStringArrayTest, METHOD) { this->METHOD(); }
+
+TYPE_TO_STRING_ARRAY_TEST(testOneDArrayToString)
+TYPE_TO_STRING_ARRAY_TEST(test3DArrayToString)
 
 } // namespace EN
