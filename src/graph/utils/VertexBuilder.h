@@ -19,7 +19,7 @@ public:
   VertexBuilder &addNotificationParameter(NotificationParameter notificationParameter);
   VertexBuilder &setStateExpr(shared_ptr<Expr> stateExpr);
   VertexBuilder &setBoundState(bool boundState);
-  VertexBuilder &addInterface(string interface);
+  VertexBuilder &addInterfaceFront(string interface);
   VertexBuilder &setInitialValue(shared_ptr<Expr> initialValue);
   VertexBuilder &setEnabledOperations(AllowedOperations op);
   VertexBuilder &setDisabledOperations(AllowedOperations op);

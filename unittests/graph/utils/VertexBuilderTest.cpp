@@ -74,7 +74,7 @@ public:
   }
 
   void testAddInterface() {
-    obj->addInterface("Rule");
+    obj->addInterfaceFront("Rule");
     shared_ptr<Vertex> v = obj->build();
     ASSERT_EQ(1, v->interfaces.size());
     ASSERT_EQ("Rule", v->interfaces[0]);

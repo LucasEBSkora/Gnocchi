@@ -59,6 +59,8 @@ const vector<SimpleTokenParam> simpleTokenPairs{
     {Parser::symbol_kind_type::S_LISTEN, "listen", "testIdentifyListen"},
     {Parser::symbol_kind_type::S_INITIALISE, "initialise",
      "testIdentifyInitialise"},
+     {Parser::symbol_kind_type::S_IMPLEMENTS, "implements",
+     "testIdentifyImplements"},
     {Parser::symbol_kind_type::S_HOLON, "holon", "testIdentifyHolon"},
     {Parser::symbol_kind_type::S_INT, "int", "testIdentifyInt"},
     {Parser::symbol_kind_type::S_INT8, "int8", "testIdentifyInt8"},

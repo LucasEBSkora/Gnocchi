@@ -92,6 +92,8 @@
 
 %token INITIALISE "initialise"
 
+%token IMPLEMENTS "implements"
+
 %token HOLON "holon"
 
 /* type names */
@@ -282,7 +284,7 @@ notification_param : IDENTIFIER "is" primitive_type {
 vertex_body : "," vertex_body_part vertex_body | %empty
 
 vertex_body_part : vertex_state | enabled_ops | initial_value | interfaces | default_edge | create_edge {
-            for (auto edge : $1) driver.graph.addEdge(edge);
+            for (auto edge : $1) driver.vertexBuilder.addBodyEdge(edge);
           }
 
 vertex_state : "state" expr {
@@ -309,9 +311,15 @@ initial_value : "initialise" expr {
     driver.vertexBuilder.setInitialValue($2);
 }
 
-interfaces: "implements" interface_list
+interfaces: "implements" interface_list 
 
-interface_list : IDENTIFIER | IDENTIFIER interfaces
+interface_list : IDENTIFIER _interface_list {
+    driver.vertexBuilder.addInterfaceFront($1);
+}
+
+_interface_list : %empty | IDENTIFIER _interface_list {
+    driver.vertexBuilder.addInterfaceFront($1);
+}
 
 default_edge : "default" edge_function {
                 driver.vertexBuilder.setDefaultWhen($2.first);

@@ -33,8 +33,8 @@ VertexBuilder &VertexBuilder::setBoundState(bool boundState) {
   return *this;
 }
 
-VertexBuilder &VertexBuilder::addInterface(string interface) {
-  this->interfaces.push_back(interface);
+VertexBuilder &VertexBuilder::addInterfaceFront(string interface) {
+  this->interfaces.insert(this->interfaces.begin(), interface);
   return *this;
 }
 

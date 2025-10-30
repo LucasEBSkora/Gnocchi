@@ -131,6 +131,10 @@ initialise {
 	return Gnocchi::Parser::make_INITIALISE(getLoc());
 }
 
+implements {
+	return Gnocchi::Parser::make_IMPLEMENTS(getLoc());
+}
+
 holon {
 	return Gnocchi::Parser::make_HOLON(getLoc());
 }
