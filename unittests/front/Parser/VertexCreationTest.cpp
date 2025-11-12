@@ -199,6 +199,20 @@ public:
     ASSERT_EQ("b", v->id);
     ASSERT_EQ(1, v->getEdges().size());
   }
+
+  void testCreateFullVertex() {
+    input << "declare a is vertex int32;\n"
+             "declare b is vertex int32;\n"
+             "declare c is vertex bool (ignore is bool),\n"
+             "default when !ignore with this,\n"
+             "default when !ignore with this,\n"
+             "state bound b == c;\n";
+    ASSERT_EQ(0, obj->parse());
+    EN::Graph &g = obj->getGraph();
+    ASSERT_EQ(3, g.getVertices().size());
+    shared_ptr<EN::Vertex> v = g.getVertices().back();
+    ASSERT_EQ("c", v->id);
+  }
 };
 
 #define VERTEX_CREATION_TEST(METHOD)                                                                                   \
@@ -221,4 +235,5 @@ VERTEX_CREATION_TEST(testCreateVertexDefaultWithClause)
 VERTEX_CREATION_TEST(testCreateVertexDefaultWhenClause)
 VERTEX_CREATION_TEST(testCreateVertexDefaultWhenWithClauses)
 VERTEX_CREATION_TEST(testCreateVertexWithEdge)
+VERTEX_CREATION_TEST(testCreateFullVertex)
 } // namespace Gnocchi
