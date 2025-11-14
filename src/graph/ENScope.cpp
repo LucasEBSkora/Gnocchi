@@ -17,6 +17,7 @@ void Scope::addVertex(shared_ptr<Vertex> v) {
 }
 
 void Scope::addEdge(shared_ptr<Edge> e) { edges.push_back(e); }
+void Scope::addInitialNotification(shared_ptr<NotifyExpr> n) { initialNotifications.push_back(n); }
 const vector<shared_ptr<Vertex>> Scope::getVertices() const { return vertices; }
 bool Scope::hasVertex(string name) const { return namedVertices.count(name); }
 const shared_ptr<Vertex> Scope::getVertex(string id) const {
@@ -27,5 +28,5 @@ const shared_ptr<Vertex> Scope::getVertex(string id) const {
 }
 
 const vector<shared_ptr<Edge>> Scope::getEdges() const { return edges; }
-
+const vector<shared_ptr<NotifyExpr>> Scope::getInitialNotifications() const { return initialNotifications; }
 } // namespace EN

@@ -232,6 +232,10 @@
 %type <EN::Operator> unary_right_op
 %type <std::shared_ptr<EN::Expr>> access
 
+%type <std::shared_ptr<EN::NotifyExpr>> notify
+%type <std::vector<std::shared_ptr<EN::Expr>>> expr_list
+%type <std::vector<std::shared_ptr<EN::Expr>>> _expr_list
+
 %start program
 
 %%
@@ -245,8 +249,9 @@ statement : definition
           | "edge" create_edge ";" {
             for (auto edge : $2) driver.graph.addEdge(edge);
           }
-          | expr ";"
-          | notify ";"
+          | notify ";" {
+            driver.graph.addInitialNotification($1);
+          }
             
 definition : vertex_definition
 
@@ -390,8 +395,14 @@ access : primary_expr {
                       | "(" expr_list ")" notification_or_field
                       | "[" expr "]" notification_or_field */
 
-expr_list :  expr _expr_list
-_expr_list : %empty | "," expr _expr_list
+expr_list :  expr _expr_list {
+    $2.insert($2.begin(), $1);
+    $$ = $2;
+}
+_expr_list : %empty {$$ = {};} | "," expr _expr_list {
+    $3.insert($3.begin(), $2);
+    $$ = $3;
+}
 
 primary_expr : SIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1);}
              | UNSIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1); }
@@ -405,8 +416,8 @@ primary_expr : SIGNED_INTEGER_LITERAL {$$ = std::make_shared<EN::LiteralExpr>($1
              | "this" {$$ = std::make_shared<EN::VertexAccessExpr>("this", graph);}
              | "(" expr ")" {$$ = $2;}
 
-notify :  "->" access
-         | expr_list "->" access
+notify :  "->" access { $$ = std::make_shared<EN::NotifyExpr>(std::vector<std::shared_ptr<EN::Expr>>(), $2); }
+         | expr_list "->" access { $$ = std::make_shared<EN::NotifyExpr>($1, $3); }
 
 
 %%

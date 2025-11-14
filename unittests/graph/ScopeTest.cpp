@@ -1,7 +1,9 @@
 #include "ENScope.h"
+#include "NotifyExpr.h"
 #include "SemanticException.h"
 #include "VertexBuilder.h"
 #include "gtest/gtest.h"
+#include <memory>
 
 namespace EN {
 using namespace std;
@@ -34,8 +36,7 @@ public:
   }
 
   void testAddEdge() {
-    obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(),
-                                   shared_ptr<Expr>(), shared_ptr<Expr>()));
+    obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>()));
     ASSERT_EQ(1, obj->getEdges().size());
   }
 
@@ -61,22 +62,22 @@ public:
     ASSERT_TRUE(obj->getVertex("1"));
   }
 
-  void testGetVertexFails() {
-    ASSERT_THROW(obj->getVertex("1"), SemanticException);
-  }
+  void testGetVertexFails() { ASSERT_THROW(obj->getVertex("1"), SemanticException); }
 
   void testGetEdges() {
-    obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(),
-                                   shared_ptr<Expr>(), shared_ptr<Expr>()));
-    obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(),
-                                   shared_ptr<Expr>(), shared_ptr<Expr>()));
-    obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(),
-                                   shared_ptr<Expr>(), shared_ptr<Expr>()));
+    obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>()));
+    obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>()));
+    obj->addEdge(make_shared<Edge>(shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>(), shared_ptr<Expr>()));
     ASSERT_EQ(3, obj->getEdges().size());
+  }
+
+  void testInitialNotification() {
+    obj->addInitialNotification(make_shared<NotifyExpr>(vector<shared_ptr<Expr>>{}, shared_ptr<Expr>()));
+    ASSERT_EQ(1, obj->getInitialNotifications().size());
   }
 };
 
-#define SCOPE_TEST(METHOD)                                                     \
+#define SCOPE_TEST(METHOD)                                                                                             \
   TEST_F(ScopeTest, METHOD) { this->METHOD(); }
 
 SCOPE_TEST(testAddVertexUnnamed)
@@ -87,5 +88,5 @@ SCOPE_TEST(testHasVertex)
 SCOPE_TEST(testGetVertexWorks)
 SCOPE_TEST(testGetVertexFails)
 SCOPE_TEST(testGetEdges)
-
+SCOPE_TEST(testInitialNotification)
 } // namespace EN
