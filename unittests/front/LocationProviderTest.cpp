@@ -1,8 +1,6 @@
 #include "LocationProvider.h"
 #include "gtest/gtest.h"
 
-#include <iostream>
-
 namespace Gnocchi {
 using namespace std;
 

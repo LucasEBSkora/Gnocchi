@@ -1,24 +1,25 @@
+#include "ParametersParser.h"
 #include "interpreter.h"
 #include "parser.hpp"
-#include <iostream>
 
 using namespace Gnocchi;
 using namespace std;
 
-int main(int argc, char **argv) {
+int main(int argc, const char **argv) {
 
-  if (argc != 2) {
-    cerr << "Usage: Gnocchi <in-file> \n"
-         << "where in-file is the source file to compile" << endl;
-    return -1;
+  ParametersParser parser;
+  int ret = parser.parse(argc, argv);
+  if (ret != 0) {
+    return ret;
   }
-
-  Interpreter i{argv[1]};
-  ifstream file(argv[1]);
+  Parameters params = parser.getParameters();
+  Interpreter i{params.inputFile};
+  ifstream file(params.inputFile);
   i.switchInputStream(&file);
   int res = i.parse();
-  if (res == 0) {
+  if (res != 0) {
+    return res;
   }
 
-  return res;
+  return 0;
 }

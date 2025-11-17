@@ -32,6 +32,7 @@ set(GNOCCHI_COMPILER_INCLUDES
     ${SOURCE_DIR}/graph/utils
     ${SOURCE_DIR}/graph/type
     ${SOURCE_DIR}/graph/expr
+    ${SOURCE_DIR}/utils/
     ${SOURCE_DIR}
     ${GENERATED_DIRECTORY}
 )
@@ -49,6 +50,7 @@ file(GLOB GNOCCHI_COMPILER_SOURCES
     ${SOURCE_DIR}/graph/type/*.cpp
     ${SOURCE_DIR}/graph/expr/*.cpp
     ${SOURCE_DIR}/graph/utils/*.cpp
+    ${SOURCE_DIR}/utils/*.cpp
 )
 
 add_library(CompilerSources STATIC 
